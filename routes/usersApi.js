@@ -6,7 +6,7 @@ var User = require('../models/User');
 function users(req, res) {
   User.find().exec()
       .then(function(result){
-            res.render('users', { users: result });
+            res.send(result);
       });
 }
 

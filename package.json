@@ -13,11 +13,12 @@
     "serve-favicon": "~2.0.1",
     "debug": "~1.0.4",
     "passport": "~0.2.0",
-    "mongoose": "~3.8.15",
+    "mongoose": "^3.8.15",
     "bootstrap": "~3.2.0",
     "express-handlebars": "~1.0.1",
     "zepto": "0.0.4",
-    "font-awesome": "^4.2.0"
+    "font-awesome": "^4.2.0",
+    "require-dir": "^0.1.0"
   },
   "devDependencies": {
     "chai": "~1.9.1",
