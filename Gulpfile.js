@@ -14,27 +14,42 @@ var $ = loadPlugins({
     lazy: true
 });
 
-gulp.task('style', function () {
-  gulp.src('./assets/css/style.less')
-    .pipe($.less())
-    .pipe(gulp.dest('./public'));
+gulp.task('style', function() {
+    gulp.src('./assets/css/style.less')
+        .pipe($.less()).on('error',$.util.log.bind($.util))
+        .pipe(gulp.dest('./public'));
+
+     gulp.src([
+        'node_modules/vex/css/vex.css',
+        'node_modules/vex/css/vex-theme-os.css',
+        
+    ])
+        .pipe($.concat('vendors.css'))
+        .pipe(gulp.dest('public'));
 });
 
-gulp.task('oldies', function () {
-  //concat files for ie<9
+gulp.task('oldies', function() {
+    //concat files for ie<9
+});
+
+gulp.task('build-admins', function() {
+
+    return gulp.src('./assets/js/admin/index.js')
+        .pipe($.pureCjs({
+            output: 'admin.js'
+        })).on('error',$.util.log)
+        .pipe(gulp.dest('public'));
 });
 
 
-gulp.task('vendors', function () {
-  gulp.src([
-      'node_modules/zepto/zepto.min.js',
-      'assets/js/zepto2jquery.js',
-      'assets/js/zepto-special-events.js',
-      'node_modules/bootstrap/dist/js/bootstrap.js',
-      'assets/js/gaq.js',
-      ])
-    .pipe($.concat('vendors.js'))
-    .pipe(gulp.dest('public'));
+gulp.task('build-vendors', function() {
+    gulp.src([
+        'node_modules/jquery/dist/jquery.js',
+        'node_modules/bootstrap/dist/js/bootstrap.js',
+        'assets/js/gaq.js',
+    ])
+        .pipe($.concat('vendors.js'))
+        .pipe(gulp.dest('public'));
 });
 
 gulp.task('serve', function() {
@@ -48,19 +63,5 @@ gulp.task('serve', function() {
 });
 
 
-/*
-gulp.task('test', function () {
-  return gulp.src('./test/*.js')
-    .pipe($.mocha({
-      ui: 'bdd',
-      reporter: 'spec'
-    }));
-});
-*/
-/*
-gulp.task('watch', function () {
-  gulp.watch([], ['test']);
-});
-*/
 
 gulp.task('default', ['test', 'watch']);

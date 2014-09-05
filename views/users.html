@@ -1,3 +1,54 @@
-<pre>
-    {{users}}
-</pre>
+<section id="users">
+    <header>
+        <h1>Users</h1>
+    </header>
+
+    <div class="btn-group">
+        <button 
+            type="button" 
+            class="add btn btn-primary btn-lg"
+            data-toggle="tooltip" 
+            data-placement="bottom" 
+            title="Create new user">
+
+            <i class="fa fa-plus-circle"></i>
+        </button>
+
+        
+        <button type="button" class="btn btn-lg btn-default">Right</button>
+    </div>
+
+    <table class="table table-bordered table-condensed table-zebra table-hover">
+        <thead>
+            <th>Name</th>
+            <th>Password</th>
+            <th>Email</th>
+            <th>Admin</th>
+            <th>Confirmed</th>
+            <th>&nbsp;</th>
+        </thead>
+        <tbody>
+            {{#users}}
+            <tr>
+                <td>{{name}}</td>
+                <td>{{password}}</td>
+                <td>{{email}}</td>
+                <td>{{admin}}</td>
+                <td>{{confirmed}}</td>
+                <td>
+                    <button type="button" class="btn btn-danger delete" data-id="{{name}}" data-toggle="tooltip" data-placement="bottom" title="Delete user {{name}}">
+
+                        <i class="fa fa-remove"></i>
+                    </button>
+                </td>
+            </tr>
+            {{/users}}
+        </tbody>
+
+    </table>
+
+
+</section>
+
+<script src="/admin.js">
+</script>
