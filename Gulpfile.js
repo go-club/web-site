@@ -20,6 +20,23 @@ gulp.task('style', function () {
     .pipe(gulp.dest('./public'));
 });
 
+gulp.task('oldies', function () {
+  //concat files for ie<9
+});
+
+
+gulp.task('vendors', function () {
+  gulp.src([
+      'node_modules/zepto/zepto.min.js',
+      'assets/js/zepto2jquery.js',
+      'assets/js/zepto-special-events.js',
+      'node_modules/bootstrap/dist/js/bootstrap.js',
+      'assets/js/gaq.js',
+      ])
+    .pipe($.concat('vendors.js'))
+    .pipe(gulp.dest('public'));
+});
+
 gulp.task('serve', function() {
     $.nodemon({
         script: 'bin/www.js',

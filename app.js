@@ -16,7 +16,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.engine('html', exphbs({
     defaultLayout: 'main',
-    extname: ".html"
+    extname: '.html'
 }));
 app.set('view engine', 'html');
 
@@ -27,6 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules/font-awesome')));
 
 app.use('/', routes);
 app.use('/users', users);
