@@ -15,3 +15,14 @@ $('#users .delete').click(function(){
     });
     
 });
+
+$('#users .edit').click(function(){
+    $('#edit-user').modal('show');
+    
+});
+
+
+$('#users .add').click(function(){
+    $('#edit-user').modal('show');
+    
+});
