@@ -9,25 +9,41 @@
 'use strict';
 
 var gulp = require('gulp');
-var mocha = require('gulp-mocha');
-var less = require('gulp-less');
-
-gulp.task('style', function () {
-  gulp.src('./assets/stylesheets/style.less')
-    .pipe(less())
-    .pipe(gulp.dest('./public/stylesheets'));
+var loadPlugins = require('gulp-load-plugins');
+var $ = loadPlugins({
+    lazy: true
 });
 
+gulp.task('style', function () {
+  gulp.src('./assets/css/style.less')
+    .pipe($.less())
+    .pipe(gulp.dest('./public'));
+});
+
+gulp.task('serve', function() {
+    $.nodemon({
+        script: 'bin/www.js',
+        ext: 'js',
+        env: {
+            'NODE_ENV': 'development'
+        }
+    });
+});
+
+
+/*
 gulp.task('test', function () {
   return gulp.src('./test/*.js')
-    .pipe(mocha({
+    .pipe($.mocha({
       ui: 'bdd',
       reporter: 'spec'
     }));
 });
-
+*/
+/*
 gulp.task('watch', function () {
-  gulp.watch(['./lib/**/*.js', './test/**/*.js'], ['test']);
+  gulp.watch([], ['test']);
 });
+*/
 
 gulp.task('default', ['test', 'watch']);
