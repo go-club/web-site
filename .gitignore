@@ -3,3 +3,5 @@
 *config*
 public/style.css
 public/*
+node_modules
+site_deploy

@@ -1,11 +1,13 @@
 'user strict';
 
-var mongoose = require('mongoose');
 
-module.exports = mongoose.model('User', {
-    name: String,
-    password: String,
-    email: String,
-    admin: Boolean,
-    confirmed: Boolean
+var jt = require('jt');
+
+module.exports = jt.Structure('User',{
+    name: jt.string.maxlength(20),
+    password: jt.string,
+    email: jt.string.maxlength(200),
+    admin: jt.boolean.default(false),
+    confirmed: jt.boolean.default(false)
 });
+

@@ -12,32 +12,36 @@ var routes = require('./routes/index');
 var initModel = require('./models/init');
 var app = express();
 
+app.set('view engine', 'jsx');
+var options = { jsx: { harmony: true } };
+app.engine('jsx', require('express-react-views').createEngine(options));
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-
+/*
 app.engine('html', exphbs({
     defaultLayout: 'main',
     extname: '.html'
 
 }));
 app.set('view engine', 'html');
-
+*/
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
+/*app.use(bodyParser.urlencoded({
     extended: false
 }));
 app.use(cookieParser());
-
+*/
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/font-awesome')));
 
 
 app.use('/', routes.home);
-app.use('/users-api', routes.usersApi);
+//app.use('/users-api', routes.usersApi);
 app.use('/users', routes.users);
 
 

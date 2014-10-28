@@ -1,6 +1,8 @@
 #!/usr/bin/env node
+require('traceur/bin/traceur-runtime');
 var debug = require('debug')('go-club');
-var app = require('../app');
+var app = require('../site_deploy/app');
+
 
 app.set('port', process.env.PORT || 3000);
 

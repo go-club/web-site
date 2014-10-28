@@ -5,12 +5,21 @@ module.exports = connectMongo;
 
 var User = require('./User');
 
-function connectMongo() {
+function connectMongo(initUsers = false) {
     mongoose.connect('mongodb://localhost/go-club');
 
     var db = connectMongo.db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', checkAdminUser);
+    return new Promise((resolve, reject) => {
+        db.once('open', () => {
+            if (initUsers) {
+                checkAdminUser();    
+            }
+            
+            resolve();
+        });    
+    });
+    
 
 }
 
@@ -28,12 +37,12 @@ function saveAdminUser(err, adminsCount) {
         return console.error(err);
     }
 
-    if (adminsCount > 0) {
+    if (adminsCount > 1) {
         return console.log('admin user already saved');
     }
 
     var parroit = new User({
-        name: 'admin',
+        name: 'admin2',
         password: 'secret',
         admin: true,
         confirmed: true,
