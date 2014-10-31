@@ -19,8 +19,8 @@ var rootStyle = './assets/styles/style.scss';
 var styles = './assets/styles/**/*.scss';
 var srcs = ['./models/**/*.js', './routes/**/*.js', './app.js'];
 var tests = './test/**/*.js';
-var deployFolders = ['./views/**/*','./public/**/*'];
-var distTests = './site_deploy/test/**/*.js';
+//var deployFolders = ['./views/**/*', './public/**/*'];
+//var distTests = './site_deploy/test/**/*.js';
 
 gulp.task('style', function() {
     gulp.src(rootStyle)
@@ -39,30 +39,13 @@ gulp.task('style', function() {
 gulp.task('watch-style', function() {
     return gulp.watch([styles], ['style']);
 });
-/*
-gulp.task('build-admins', function() {
 
-    return gulp.src('./assets/js/admin/index.js')
-        .pipe($.pureCjs({
-            output: 'admin.js'
-        })).on('error',$.util.log)
-        .pipe(gulp.dest('public'));
-});
-
-
-gulp.task('build-vendors', function() {
-    gulp.src([
-        'node_modules/jquery/dist/jquery.js',
-        'node_modules/bootstrap/dist/js/bootstrap.js',
-        'assets/js/gaq.js',
-    ])
-        .pipe($.concat('vendors.js'))
-        .pipe(gulp.dest('public'));
-});
-*/
 
 gulp.task('serve', function() {
-    $.nodemon({
+
+    return $.nodemon({
+        nodeArgs: ['--harmony'],
+        watch: ['routes','views','model'],
         script: 'bin/www.js',
         ext: 'js',
         env: {
@@ -87,11 +70,11 @@ gulp.task('build', function() {
 });
 
 gulp.task('test', ['build'], function() {
-    return gulp.src(distTests)
+    return gulp.src(tests)
         .pipe($.mocha({}));
 });
-
-gulp.task('deploy', ['build','style','fonts'], function() {
+/*
+gulp.task('deploy', ['build', 'style', 'fonts'], function() {
     return gulp.src(deployFolders, {
             base: __dirname
         })
@@ -99,9 +82,21 @@ gulp.task('deploy', ['build','style','fonts'], function() {
 });
 
 
-gulp.task('fonts',  function() {
+gulp.task('watch-deploy', function() {
+    //start the server at the beginning of the task
+    $.express.run({
+        env: 'development',
+        port: 4000,
+        file: './bin/www.js'
+    });
+
+    //restart the server when file changes
+    gulp.watch(srcs.concat(srcs.concat(deployFolders).concat([styles])), ['deploy', $.express.run]);
+});
+*/
+gulp.task('fonts', function() {
     return gulp.src('./node_modules/font-awesome/fonts/*', {
-            base: __dirname +'/node_modules/font-awesome'
+            base: __dirname + '/node_modules/font-awesome'
         })
         .pipe(gulp.dest('site_deploy/public'));
 });

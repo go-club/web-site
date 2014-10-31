@@ -4,17 +4,19 @@ var mongoose = require('mongoose');
 module.exports = connectMongo;
 
 var User = require('./User');
+var buildModel = require('../models/jt-mongoose.js');
+var userStore = buildModel(User);
 
-function connectMongo(initUsers = false) {
-    mongoose.connect('mongodb://localhost/go-club');
+function connectMongo(initUsers) {
+    mongoose.connect('mongodb://localhost/go-club4');
 
     var db = connectMongo.db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));
-    return new Promise((resolve, reject) => {
-        db.once('open', () => {
-            if (initUsers) {
+    return new Promise(function(resolve, reject) {
+        db.once('open', function() {
+            //if (initUsers) {
                 checkAdminUser();    
-            }
+            //}
             
             resolve();
         });    
@@ -25,9 +27,7 @@ function connectMongo(initUsers = false) {
 
 
 function checkAdminUser() {
-    User.count({
-        admin: true
-    }, saveAdminUser);
+    saveAdminUser(null,0);
 
 }
 
@@ -42,17 +42,18 @@ function saveAdminUser(err, adminsCount) {
     }
 
     var parroit = new User({
-        name: 'admin2',
+        id: 'admin2',
         password: 'secret',
         admin: true,
         confirmed: true,
         email: 'andrea.parodi@ebansoftware.net'
     });
 
-    parroit.save(function(err) {
-        if (err) {
-            return console.error(err);
-        }
-        console.log('saved admin user');
-    });
+    userStore.save(parroit)
+        .then(function() {
+            console.log('saved admin user');
+        })
+        .then(null,function(err) {
+            console.log(err);
+        });
 }

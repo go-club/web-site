@@ -13,9 +13,9 @@ module.exports = React.createClass({
             </header>
 
             <nav>
-                <button type="button" className="add" title="Create new user">
+                <a href="/users/new" className="add" title="Create new user">
                     <i className="fa fa-plus-circle"></i>
-                </button>
+                </a>
 
 
             </nav>
@@ -32,21 +32,23 @@ module.exports = React.createClass({
                 <tbody>
                     {this.props.users.map(function(user) {
                         return <tr>
-                            <td>{user.name}</td>
+                            <td>{user.id}</td>
                             <td>{user.password}</td>
                             <td>{user.email}</td>
                             <td>{user.admin}</td>
                             <td>{user.confirmed}</td>
                             <td>
-                                <button type="button" className="delete" title="Delete user user.name}">
+                                <form action="/users/{user.id}" method = "delete">
+                                    <button type="submit" className="delete" title="Delete user {user.id}">
 
-                                    <i className="fa fa-remove"></i>
-                                </button>
+                                        <i className="fa fa-remove"></i>
+                                    </button>
+                                </form>
 
-                                <button type="button" className="edit" title="Edit user user.name}">
+                                <a href={'/users/'+user.id} className="edit" title="Edit user {user.id}">
 
                                     <i className="fa fa-edit"></i>
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     })}

@@ -1,4 +1,4 @@
-section.admin.list nav button {
+section.admin.list nav a {
   @include button(simple, $teal);
         
 }
@@ -69,12 +69,16 @@ section.admin.list table {
       border-left: 1px solid $table-border-color;
       border-top: 1px solid $table-border-color;
       border-bottom: 0px;
+      form {
+        display: inline;
+      }
 
-      button {
+      button,a {
         @include button(simple, $table-background);
         margin-right: 0.5em;
         display: inline-block;
         width: 100%;
+        height: 40px;
         margin-bottom: .3em;
         outline: none;
 
