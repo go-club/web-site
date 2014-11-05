@@ -1,5 +1,5 @@
 'use strict';
-var objectPath = require("object-path")
+var objectPath = require('object-path');
 var u = require('jubiq');
 var body = require('../../views/layouts/body');
 var EventEmitter = require('node-event-emitter');
@@ -16,6 +16,12 @@ assign(component, EventEmitter.prototype);
 u.mount(component, document.body, 'keepDOM', virtualify);
 
 virtualify();
+
+window.onpopstate = function(event) {
+
+    window.truth = JSON.parse(event.state);
+    component.emit('changed');
+};
 
 function virtualify() {
     var anchors = document.querySelectorAll('a[href]');
@@ -53,7 +59,7 @@ function raiseAction(e) {
 
         window.truth.url = route;
         window.truth[res.name] = res.data;
-
+        history.pushState(JSON.stringify(window.truth), null, url);
         component.emit('changed');
     });
 }
@@ -67,7 +73,7 @@ function raiseChange(e) {
     body[property] = input.value;
 
     component.emit('changed');
-    
+
     e.preventDefault();
     return false;
 }

@@ -26,9 +26,10 @@ function editUser(req, res, next) {
 
 }
 
+
 function deleteUser(req, res, next) {
     userStore.delete(req.params.id)
-        .then(function(user) {
+        .then(function() {
             res.redirect('/users/');
 
         })
@@ -37,7 +38,7 @@ function deleteUser(req, res, next) {
 }
 
 function saveUser(req, res, next) {
-    console.dir(req.body)
+
     userStore.save(req.body)
         .then(function() {
             res.redirect('/users/' + req.body.id);
@@ -69,6 +70,6 @@ module.exports = function(router, buildModel){
     router.get('/', users);
     router.get('/:id', editUser);
     router.post('/:id', saveUser);
-    router.delete('/:id', deleteUser);
+    router.post('/delete/:id', deleteUser);
     return router;
 };

@@ -39,8 +39,8 @@ module.exports = function render(users) {
                         u.td(user.confirmed),
                         u.td(
                             u.form({
-                                    action: '/users/' + user.id,
-                                    method: 'delete'
+                                    action: '/users/delete/' + user.id,
+                                    method: 'post'
 
                                 },
                                 u.button(/.delete/, {
