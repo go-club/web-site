@@ -5,26 +5,10 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var exphbs = require('express-handlebars');
 
 var routes = require('./routes/index');
 var initModel = require('./models/init');
 var app = express();
-
-app.set('view engine', 'jsx');
-var options = { jsx: { harmony: true } };
-app.engine('jsx', require('express-react-views').createEngine(options));
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-/*
-app.engine('html', exphbs({
-    defaultLayout: 'main',
-    extname: '.html'
-
-}));
-app.set('view engine', 'html');
-*/
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
@@ -41,9 +25,28 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/font-awesome')));
 
 
-app.use('/', routes.home);
-//app.use('/users-api', routes.usersApi);
-app.use('/users', routes.users);
+var truth = require('./models/truth');
+var mainView = require('./views/layouts/main');
+var u = require('jubiq');
+app.use(function render(req, res, next) {
+    res.renderTruth = function(name, data) { 
+        if (req.get('accept') == 'application/json') {
+            res.json({ data: data, name: name });
+            res.end();
+        } else {
+            var model = truth(req.baseUrl+req.route.path,null, name, data);
+            var content = u.render(mainView(model));
+            res.set('Content-Type', 'text/html');
+            res.end('<!doctype html>\n'+content);    
+        }
+        
+    };
+    next();
+});
+
+//app.use('/', routes.home);
+var buildModel = require('./models/jt-mongoose.js');
+app.use('/users', routes.users(express.Router(), buildModel));
 
 
 initModel();
@@ -56,28 +59,18 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-// error handlers
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
-}
 
-// production error handler
-// no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
+        console.dir(err);
+        res.status(err.status || 500);
+        req.baseUrl = '/';
+        req.route.path = 'error';
+        res.renderTruth('error', {
+            status:err.status || 500,
+            err: err
+        });
+
 });
 
 

@@ -58,10 +58,15 @@ module.exports =function buildModel(Structure) {
             get: function(id) {
                 return model.findOne({id:id}).exec()
                     .then(function(doc) { return new Structure(doc); });
+            },
+            
+            delete: function(id) {
+                return model.findOne({id:id}).exec()
+                    .then(function(doc) { return new Structure(doc); });
             }
         };
 
         models.set(Structure,result);
         return result;
     }
-}
+};

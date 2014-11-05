@@ -1,13 +1,13 @@
-body > header >nav {
+body > section > header >nav {
     $navigation-padding: 1em;
     $navigation-background: $dark-gray;
     $navigation-color: transparentize(white, 0.3);
     $navigation-color-hover: white;
-    $navigation-height: 60px;
+    $navigation-height: 30px;
     $navigation-nav-button-background: $base-accent-color;
     $navigation-nav-button-background-hover: lighten($navigation-background, 10);
     $navigation-nav-button-border: 1px solid lighten($navigation-nav-button-background, 20);
-    $navigation-search-background: lighten($navigation-background, 5);
+    $navigation-search-background: lighten($navigation-background, 20);
     $navigation-search-border: 1px solid darken($navigation-background, 5);
     $navigation-active-link-color: transparentize(white, 0.5);
     $navigation-submenu-padding: 1em;
@@ -31,7 +31,7 @@ body > header >nav {
         padding-right: 2em;
         img {
             max-height: $navigation-height;
-            padding: .8em 0;
+            padding: .3em 0;
         }
     }
     // Mobile view
@@ -210,7 +210,7 @@ body > header >nav {
         width: 24em;
         
         a {
-            margin-top: 1.2em;
+            margin-top: 0.2em;
             float: right;
             @include transition (all 0.2s ease-in-out);
             display: inline;
@@ -220,9 +220,10 @@ body > header >nav {
             font-size: .8em;
             font-weight: 800;
             text-transform: uppercase;
-            padding: .4em .5em;
+            padding: .2em .4em;
+            cursor: pointer;
             @include media($large-screen) {
-                padding: .5em 1em;
+                padding: .2em .4em;
             }
             &:hover {
                 background: lighten($navigation-nav-button-background, 10);
@@ -240,14 +241,14 @@ body > header >nav {
         $search-bar-border-color: $base-border-color;
         $search-bar-border: 1px solid $search-bar-border-color;
         $search-bar-background: lighten($search-bar-border-color, 10);
-        padding: .85em .6em;
+        padding: .1em;
         float: left;
         .search-and-submit {
             position: relative;
             input[type=search] {
                 background: $navigation-search-background;
                 border: $navigation-search-border;
-                padding: .6em .8em;
+                padding: .3em;
                 font-size: .9em;
                 font-style: italic;
                 color: $navigation-color;

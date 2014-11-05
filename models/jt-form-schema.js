@@ -1,47 +1,46 @@
-var jt = require('jt');
+var u = require('jubiq');
 
 
-var ReactForms = require('react-forms');
-var Schema = ReactForms.schema.Schema;
-var Property = ReactForms.schema.Property;
-
-function transpile(type) {
+function inputType(type) {
     //console.log(type)
     switch (type) {
         case 'Number':
-            return {valueTranslate:'number',inputType:'number'};
+            return 'number';
         case 'String':
-            return {valueTranslate:'string',inputType:'text'};
+            return 'text';
         case 'Boolean':
-            return {valueTranslate:'bool',inputType:'checkbox'};
-        case 'Date':
-            return {valueTranslate:'date',inputType:'date'};
+            return 'checkbox';
+        
     }
-    return {valueTranslate:'any',inputType:'text'};
+    return 'text';
 }
 
-module.exports = function buildSchema(Structure, fields) {
+exports.buildSchema = function buildSchema(Structure, fields) {
+    return function(model){
+        var inputs = Structure.meta.fields
+            .filter(function(f) {
+                return (!fields) || fields.indexOf(f.name) !== -1;
+            })
+            .map(function(f) {
+                var attrs = {
+                    name: f.name,
+                    type: inputType(f.type),
+                    label: f.label
+                };
 
-    var props = Structure.meta.fields
-        .filter(function(f) {
-            return (!fields) || fields.indexOf(f.name) !== -1;
-        })
-        .map(function(f) {
-            var input = transpile(f.type);
-            var propAttrs = {
-                name: f.name,
-                type: input.valueTranslate,
-                inputType: input.inputType,
-                label: f.label
-            };
+                return attrs;
+            });
 
-            return new Property(propAttrs);
-        });
 
-    var schemaAttrs = {
-        //name: Structure.meta.type,
-        label: Structure.meta.type
+        return inputs;    
     };
+    
+};
 
-    return new Schema(schemaAttrs, props);
+exports.render = function render(field, value) {
+    return u.label(field.label, u.input({
+        type: field.type,
+        value: value,
+        name: field.name
+    }));
 };
