@@ -1,25 +1,17 @@
 'use strict';
 
-
-function getDefault() {
-	return {
-		url: null,
-		editUser: null,
-		users: [],
-		loggedUser: null,
-		error: null
-		
-	};
-}
+var Root = require('./Root');
 
 function get (url,loggedUser,propName,propValue) {
-	console.log('url is now:',url);
-	//if (url.indexOf('undefined') != -1) throw new Error();
+	var root = new Root({
+		url:url,
+		loggedUser: loggedUser
+	})
+		.set(propName, propValue);
 
-	var def = getDefault();
-	def[propName] = propValue;
-	def.url = url;
-	return def;	
+	
+	return root;		
+
 }
 
 module.exports = get;

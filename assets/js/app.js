@@ -1,12 +1,17 @@
 'use strict';
+
 var objectPath = require('object-path');
 var u = require('jubiq');
 var body = require('../../views/layouts/body');
 var EventEmitter = require('node-event-emitter');
 var assign = require('object-assign');
 var request = require('browser-request');
+var Root = require('../../models/Root');
+
+var root = new Root(window.truth);
+
 var component = function() {
-    return body(window.truth);
+    return body(root);
 };
 
 EventEmitter.init.call(component);
@@ -19,7 +24,7 @@ virtualify();
 
 window.onpopstate = function(event) {
 
-    window.truth = JSON.parse(event.state);
+    root = new Root(JSON.parse(event.state));
     component.emit('changed');
 };
 
@@ -57,9 +62,11 @@ function raiseAction(e) {
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
 
-        window.truth.url = route;
-        window.truth[res.name] = res.data;
-        history.pushState(JSON.stringify(window.truth), null, url);
+        root = root
+            .set('url',route)
+            .set(res.name, res.data);
+
+        history.pushState(JSON.stringify(root), null, url);
         component.emit('changed');
     });
 }
@@ -69,8 +76,8 @@ function raiseChange(e) {
     var form = e.currentTarget;
     var property = input.getAttribute('name');
     var payloadName = form.getAttribute('data-payload') || null;
-    var body = (payloadName && objectPath.get(window.truth, payloadName)) || null;
-    body[property] = input.value;
+    var body = (payloadName && objectPath.get(root, payloadName)) || null;
+    body.set(property, input.value);
 
     component.emit('changed');
 
@@ -83,7 +90,7 @@ function raiseSubmit(e) {
     var url = e.currentTarget.getAttribute('data-action');
     var method = e.currentTarget.getAttribute('method') || 'get';
     var payloadName = e.currentTarget.getAttribute('data-payload') || null;
-    var body = (payloadName && JSON.stringify(objectPath.get(window.truth, payloadName))) || null;
+    var body = (payloadName && JSON.stringify(objectPath.get(root, payloadName))) || null;
 
     var options = {
         body: body,
@@ -98,7 +105,7 @@ function raiseSubmit(e) {
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
 
-        window.truth[res.name] = res.data;
+        root = root.set(res.name, res.data);
 
         component.emit('changed');
     });
@@ -106,3 +113,14 @@ function raiseSubmit(e) {
     e.preventDefault();
     return false;
 }
+
+
+
+/////////////////////////////////////////////
+var undo = document.querySelector('a.undo');
+
+undo.addEventListener('click', function(e){
+    root = root.__proto__;
+    component.emit('changed');
+
+}, false);

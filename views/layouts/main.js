@@ -2,8 +2,11 @@ var u = require('jubiq');
 var content = require('./body');
 
 module.exports = function render(truth) {
-    
-    
+    //console.log(truth, typeof truth);
+    //throw new Error    
+    var root = JSON.stringify(truth);
+    truth.debug();
+    console.log(root)
     return u.html({
             lang: 'en'
         },
@@ -27,7 +30,7 @@ module.exports = function render(truth) {
         u.body(
             content(truth),
 
-            u.script('var truth = ' + JSON.stringify(truth) + ';'),
+            u.script('var truth = ' + root + ';'),
             u.script({src:'/go-club.js'})
         )
     );

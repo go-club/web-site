@@ -37,7 +37,9 @@ app.use(function render(req, res, next) {
             });
             res.end();
         } else {
-            var model = truth(req.baseUrl + req.route.path, null, name, data);
+            var url = req.baseUrl + req.route.path;
+            console.log(url);
+            var model = truth(url, null, name, data);
             var content = u.render(mainView(model));
             res.set('Content-Type', 'text/html');
             res.end('<!doctype html>\n' + content);
@@ -65,19 +67,17 @@ app.use(function(req, res, next) {
 
 
 app.use(function(err, req, res, next) {
-    
+
     res.status(err.status || 500);
     req.baseUrl = '/';
     req.route.path = 'error';
     res.renderTruth('error', {
         status: err.status || 500,
-        err: {
-            type: err.constructor && err.constructor.name,
-            message: err.message,
-            stack: err.stack
-        }
+        type: err.constructor && err.constructor.name,
+        message: err.message,
+        stack: err.stack
     });
-    
+
 
 });
 

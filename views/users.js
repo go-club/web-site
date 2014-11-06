@@ -14,7 +14,10 @@ module.exports = function render(users) {
                         title: 'Create new user'
                     },
                     u.i(/.fa.fa-plus-circle/)
-                )
+                ),
+                u.a(/.undo/, u.i(/.fa.fa-undo/)),
+                u.a(/.redo/, u.i(/.fa.fa-repeat/))
+                
             )
         ),
 

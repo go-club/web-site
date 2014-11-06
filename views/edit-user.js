@@ -4,7 +4,6 @@ module.exports = function render(userSchema) {
     var user = userSchema.model;
     var fields = userSchema.schema;
     var htmlFields = fields.map(function(f) {
-        console.dir(user);
         return schema.render(f, user[f.name]);
     });
 
@@ -23,7 +22,10 @@ module.exports = function render(userSchema) {
                             type: 'submit'
                         },
                         'Save changes'
-                    )
+                    ),
+                       
+                    u.a(/.undo/, u.i(/.fa.fa-undo/)),
+                    u.a(/.redo/, u.i(/.fa.fa-repeat/))
                 ])
 
         )

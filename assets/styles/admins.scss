@@ -3,6 +3,10 @@ section.admin.list nav a {
         
 }
 
+section.admin.edit a {
+  @include button(simple, $teal);
+}
+
 section.admin.list table {
   $table-border-color: $base-border-color;
   $table-border: 1px solid $table-border-color;

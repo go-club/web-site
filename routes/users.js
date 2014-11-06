@@ -38,10 +38,10 @@ function deleteUser(req, res, next) {
 }
 
 function saveUser(req, res, next) {
-
-    userStore.save(req.body)
+    var user = User.from(req.body);
+    userStore.save(user)
         .then(function() {
-            res.redirect('/users/' + req.body.id);
+            res.redirect('/users/' + user.id);
         })
         .then(null, function(err){
             

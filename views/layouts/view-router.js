@@ -18,6 +18,6 @@ module.exports = function(truth) {
             return require('../edit-user')(truth.editUser);
 
     }
-
+    console.dir(url)
     throw new Error('unknown url:'+url);
 };
