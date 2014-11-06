@@ -1,13 +1,13 @@
 'user strict';
 
 
-var jt = require('jt');
+var i = require('immutato');
 
-module.exports = jt.Structure('User',{
-    id: jt.string.maxlength(20).label('Name'),
-    password: jt.string,
-    email: jt.string.maxlength(200),
-    admin: jt.boolean.default(false),
-    confirmed: jt.boolean.default(false)
-});
+module.exports = i.struct({
+    id: i.String.maxlength(20).label('Name'),
+    password: i.String,
+    email: i.String.maxlength(200),
+    admin: i.Boolean.default(false),
+    confirmed: i.Boolean.default(false)
+},'User');
 

@@ -4,6 +4,7 @@ module.exports = function render(userSchema) {
     var user = userSchema.model;
     var fields = userSchema.schema;
     var htmlFields = fields.map(function(f) {
+        console.dir(user);
         return schema.render(f, user[f.name]);
     });
 

@@ -1,6 +1,17 @@
-var jt = require('jt');
 var mongoose = require('mongoose');
+var chilli = require('chilli');
 var models = new Map();
+var assign = require('object-assign');
+
+function demongoosify(Structure) {
+    return function(doc) {
+        delete doc._doc._id;
+        delete doc._doc.__v;
+
+        return new Structure(doc._doc);
+    };
+
+}
 
 module.exports = function buildModel(Structure) {
 
@@ -12,11 +23,12 @@ module.exports = function buildModel(Structure) {
 
         var fields = Structure.meta.fields.map(function(f) {
             var prop = {};
-            prop[f.name] = f.primitive;
+            prop[f.name] = f.type.primitive;
+
             return prop;
         });
 
-        var documentFields = Object.assign.apply(null, fields);
+        var documentFields = assign.apply(null, fields);
         var Model = mongoose.model(Structure.meta.type, documentFields);
 
         var result = {
@@ -25,36 +37,42 @@ module.exports = function buildModel(Structure) {
             all: function() {
                 return Model.find().exec()
                     .then(function(results) {
-                        return results.map(Structure);
+                        return results.map(demongoosify(Structure));
                     });
             },
 
             save: function(doc) {
+                var instance = new Structure(doc);
 
                 return new Promise(function(resolve, reject) {
                     Model.findOne({
-                            id: doc.id
+                            id: instance.id
                         }).exec()
                         .then(function(existingDoc) {
                             try {
                                 if (!existingDoc) {
                                     existingDoc = new Model();
                                 }
-                                Object.assign(existingDoc, doc);
+                                assign(existingDoc, instance);
 
                                 existingDoc.save(function(err) {
                                     if (err) {
+                                        
                                         return reject(err);
                                     }
                                     resolve();
                                 });
 
                             } catch (err) {
+                                
                                 reject(err);
                             }
 
                         })
-                        .then(null, reject);
+                        .then(null, function(err){
+                            
+                            reject(err);
+                        });
                 });
 
 
@@ -64,9 +82,7 @@ module.exports = function buildModel(Structure) {
                 return Model.findOne({
                         id: id
                     }).exec()
-                    .then(function(doc) {
-                        return new Structure(doc);
-                    });
+                    .then(demongoosify(Structure));
             },
 
             delete: function(id) {

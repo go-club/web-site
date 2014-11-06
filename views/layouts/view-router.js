@@ -10,6 +10,7 @@ module.exports = function(truth) {
         case '/users':
             return require('../users')(truth.users);
         case '/error':
+            
             return require('../error')(truth.error);
         case '/users/new':
             return require('../edit-user')(truth.editUser);

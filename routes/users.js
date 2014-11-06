@@ -43,7 +43,10 @@ function saveUser(req, res, next) {
         .then(function() {
             res.redirect('/users/' + req.body.id);
         })
-        .then(null, next);
+        .then(null, function(err){
+            
+            next(err);
+        });
 
 }
 

@@ -16,7 +16,7 @@ app.use(logger('dev'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
-    type:'application/x-www-form-urlencoded',
+    type: 'application/x-www-form-urlencoded',
     extended: true
 }));
 app.use(cookieParser());
@@ -29,17 +29,20 @@ var truth = require('./models/truth');
 var mainView = require('./views/layouts/main');
 var u = require('jubiq');
 app.use(function render(req, res, next) {
-    res.renderTruth = function(name, data) { 
+    res.renderTruth = function(name, data) {
         if (req.get('accept') == 'application/json') {
-            res.json({ data: data, name: name });
+            res.json({
+                data: data,
+                name: name
+            });
             res.end();
         } else {
-            var model = truth(req.baseUrl+req.route.path,null, name, data);
+            var model = truth(req.baseUrl + req.route.path, null, name, data);
             var content = u.render(mainView(model));
             res.set('Content-Type', 'text/html');
-            res.end('<!doctype html>\n'+content);    
+            res.end('<!doctype html>\n' + content);
         }
-        
+
     };
     next();
 });
@@ -62,14 +65,19 @@ app.use(function(req, res, next) {
 
 
 app.use(function(err, req, res, next) {
-        console.dir(err);
-        res.status(err.status || 500);
-        req.baseUrl = '/';
-        req.route.path = 'error';
-        res.renderTruth('error', {
-            status:err.status || 500,
-            err: err
-        });
+    
+    res.status(err.status || 500);
+    req.baseUrl = '/';
+    req.route.path = 'error';
+    res.renderTruth('error', {
+        status: err.status || 500,
+        err: {
+            type: err.constructor && err.constructor.name,
+            message: err.message,
+            stack: err.stack
+        }
+    });
+    
 
 });
 

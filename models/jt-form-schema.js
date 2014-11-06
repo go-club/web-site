@@ -24,8 +24,8 @@ exports.buildSchema = function buildSchema(Structure, fields) {
             .map(function(f) {
                 var attrs = {
                     name: f.name,
-                    type: inputType(f.type),
-                    label: f.label
+                    type: inputType(f.type.primitive.name),
+                    label: f.type.label
                 };
 
                 return attrs;
