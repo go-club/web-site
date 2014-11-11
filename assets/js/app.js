@@ -47,6 +47,17 @@ function virtualify() {
         f.addEventListener('change', raiseChange, false);
     });
 
+    var undo = document.querySelector('a.undo');
+
+
+    undo.addEventListener('click', onUndo, false);
+
+    var redo = document.querySelector('a.redo');
+
+
+    redo.addEventListener('click', onRedo, false);
+
+
 }
 
 function raiseAction(e) {
@@ -63,7 +74,7 @@ function raiseAction(e) {
         var res = JSON.parse(body);
 
         root = root
-            .set('url',route)
+            .set('url', route)
             .set(res.name, res.data);
 
         history.pushState(JSON.stringify(root), null, url);
@@ -77,7 +88,7 @@ function raiseChange(e) {
     var property = input.getAttribute('name');
     var payloadName = form.getAttribute('data-payload') || null;
     var body = (payloadName && objectPath.get(root, payloadName)) || null;
-    body.set(property, input.value);
+    root = root.set(payloadName + '.' + property, input.value);
 
     component.emit('changed');
 
@@ -114,13 +125,33 @@ function raiseSubmit(e) {
     return false;
 }
 
-
+/////////////////////////////////////////////
+var redoObjects = new WeakMap();
 
 /////////////////////////////////////////////
-var undo = document.querySelector('a.undo');
 
-undo.addEventListener('click', function(e){
-    root = root.__proto__;
+function onRedo(e) {
+    if (!redoObjects.has(root)) {
+        alert('no more changes to redo');
+        return;
+    }
+
+    var maybeRoot = redoObjects.get(root);
+    redoObjects.delete(root);
+
+    root = maybeRoot;
     component.emit('changed');
 
-}, false);
+}
+
+function onUndo(e) {
+    var maybeRoot = Object.getPrototypeOf(root);
+    if (Object.getPrototypeOf(maybeRoot).constructor.name !== 'Root') {
+        alert('no more changes to undo');
+        return;
+    }
+    redoObjects.set(maybeRoot, root);
+    root = maybeRoot;
+    component.emit('changed');
+
+}

@@ -20,11 +20,11 @@ var rootStyle = './assets/styles/style.scss';
 var styles = './assets/styles/**/*.scss';
 var srcs = ['./models/**/*.js', './routes/**/*.js', './app.js'];
 var tests = './test/**/*.js';
-
+var clientJs = './assets/js/app.js';
 
 gulp.task('js', function() {
 
-    return gulp.src('./assets/js/app.js')
+    return gulp.src(clientJs)
         .pipe($.sourcemaps.init())
         .pipe($.pureCjs({
             output: 'go-club.js',
@@ -32,6 +32,11 @@ gulp.task('js', function() {
         }).on('error', $.util.log.bind($.util)))
         .pipe($.sourcemaps.write('.'))
         .pipe(gulp.dest('public'));
+});
+
+
+gulp.task('watch-js', function() {
+    return gulp.watch(srcs.concat([clientJs]), ['js']);
 });
 
 gulp.task('style', function() {
@@ -51,6 +56,7 @@ gulp.task('style', function() {
 gulp.task('watch-style', function() {
     return gulp.watch([styles], ['style']);
 });
+
 
 
 gulp.task('serve', function() {
