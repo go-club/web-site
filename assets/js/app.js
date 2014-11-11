@@ -72,10 +72,11 @@ function raiseAction(e) {
 
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
-
-        root = root
-            .set('url', route)
-            .set(res.name, res.data);
+        var operations = {
+                url: route
+        };
+        operations[res.name] = res.data;
+        root = root.set(operations);
 
         history.pushState(JSON.stringify(root), null, url);
         component.emit('changed');
