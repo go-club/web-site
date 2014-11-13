@@ -3,9 +3,9 @@ var error = require('../error');
 var navbar = require('../partials/navbar');
 var viewRouter = require('./view-router');
 
-module.exports = function render(truth) {
+module.exports = function render(truth, rootComponent) {
 
-    var view = viewRouter(truth);
+    var view = viewRouter(truth, rootComponent);
 //console.dir(view);
     return u.section(/#content/,
         u.header(

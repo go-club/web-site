@@ -3,7 +3,7 @@
 @import "colors";
 @import "bourbon"; // or "bourbon" when in Rails
 @import "_base";
-@import "_buttons";
+//@import "_buttons";
 @import "grid-settings";
 @import "neat";
 @import "_tables";
@@ -12,6 +12,17 @@
 @import "header";
 
 
+
 a[data-href] {
 	cursor:pointer !important;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+section#content  {
+
+  @include outer-container;
 }

@@ -1,10 +1,21 @@
+
+
 section.admin.list nav a {
   @include button(simple, $teal);
         
 }
 
-section.admin.edit a {
-  @include button(simple, $teal);
+section.admin.edit {
+  form a {
+    @extend %button;
+    @include appearance(none);
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
 }
 
 section.admin.list table {
@@ -62,6 +73,8 @@ section.admin.list table {
       padding: $table-padding;
       border-left: 1px solid $table-border-color;
       border-bottom: 0px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -69,10 +82,13 @@ section.admin.list table {
     background-color: $table-background;
 
     td {
+      overflow: hidden;
+      text-overflow: ellipsis;
       padding: $table-padding;
       border-left: 1px solid $table-border-color;
       border-top: 1px solid $table-border-color;
       border-bottom: 0px;
+      
       form {
         display: inline;
       }

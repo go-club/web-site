@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(truth) {
+module.exports = function(truth, rootComponent) {
     var url = truth.url;
 
     if (url[url.length - 1] == '/') {
@@ -13,11 +13,11 @@ module.exports = function(truth) {
             
             return require('../error')(truth.error);
         case '/users/new':
-            return require('../edit-user')(truth.editUser);
+            return require('../edit-user')(truth.editUser, rootComponent);
         case '/users/:id':
-            return require('../edit-user')(truth.editUser);
+            return require('../edit-user')(truth.editUser, rootComponent);
 
     }
-    console.dir(url)
+
     throw new Error('unknown url:'+url);
 };
