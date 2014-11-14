@@ -1,7 +1,9 @@
 var u = require('jubiq');
 var logoUrl = '/img/white.png';
+var link = require('../components/link');
+//rootComponent, href, route, icon, text, className
 
-module.exports = function render() {
+module.exports = function render(rootComponent) {
 
     return u.nav(
         u.div(/.navigation-wrapper/,
@@ -11,7 +13,7 @@ module.exports = function render() {
             u.a(/#js-mobile-menu.navigation-menu-button/, {href: ''}, 'MENU'),
             u.div(/.nav/,
                 u.ul(/#navigation-menu/,
-                    u.li(/.nav-link/, u.a({href: '/users'},'Users')),
+                    u.li(/.nav-link/, link(rootComponent,'/users',null,'Users list',null,'Users')),
                     u.li(/.nav-link.more/, u.a('More'),
                         u.ul(/.submenu/,
                             u.li(u.a('Submenu Item'))

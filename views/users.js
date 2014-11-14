@@ -1,6 +1,8 @@
 var u = require('jubiq');
 var undoBtn = require('./components/undo-btn');
 var redoBtn = require('./components/redo-btn');
+var link = require('./components/link');
+var form = require('./components/form');
 
 module.exports = function render(users, rootComponent) {
 
@@ -11,12 +13,7 @@ module.exports = function render(users, rootComponent) {
 
 
             u.nav(
-                u.a(/.add/, {
-                        href: '/users/new',
-                        title: 'Create new user'
-                    },
-                    u.i(/.fa.fa-plus-circle/)
-                ),
+                link(rootComponent,'/users/new',null,'Create new user','.fa.fa-plus-circle','New','.add'),
                 undoBtn(rootComponent, '.fa.fa-undo', 'Undo', '.undo'),
                 redoBtn(rootComponent, '.fa.fa-repeat', 'Redo', '.redo')
 
@@ -43,28 +40,31 @@ module.exports = function render(users, rootComponent) {
                         u.td(user.admin),
                         u.td(user.confirmed),
                         u.td(
-                            u.form({
+                            form({
+                                    name: 'delete-user-' + user.id,
                                     action: '/users/delete/' + user.id,
-                                    method: 'post'
-
-                                },
-                                u.button(/.delete/, {
+                                    method: 'POST',
+                                    rootComponent: rootComponent
+                                }, 
+                                [u.button(/.delete/, {
                                         type: 'submit',
                                         title: 'Delete user ' + user.id
                                     },
 
                                     u.i(/.fa.fa-remove/)
-                                )
+                                )]
                             ),
-
-                            u.a(/.edit/, {
-                                    'data-route': '/users/:id',
-                                    href: '/users/' + user.id,
-                                    title: 'Edit user ' + user.id
-                                },
-
-                                u.i(/.fa.fa-edit/)
+                            link(
+                                rootComponent,
+                                '/users/' + user.id,
+                                '/users/:id',
+                                'Edit user ' + user.id,
+                                '.fa.fa-edit',
+                                '',
+                                '.edit'
                             )
+
+                           
                         )
                     );
                 })

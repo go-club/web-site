@@ -8,7 +8,7 @@ var buildModel = require('../models/jt-mongoose.js');
 var userStore = buildModel(User);
 
 function connectMongo(initUsers) {
-    mongoose.connect('mongodb://localhost/go-club-11');
+    mongoose.connect('mongodb://localhost/go-club-12');
 
     var db = connectMongo.db = mongoose.connection;
     db.on('error', console.error.bind(console, 'connection error:'));

@@ -24,7 +24,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/font-awesome')));
 
-
 var truth = require('./models/truth');
 var mainView = require('./views/layouts/main');
 var u = require('jubiq');

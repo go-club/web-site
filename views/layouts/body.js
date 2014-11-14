@@ -9,7 +9,7 @@ module.exports = function render(truth, rootComponent) {
 //console.dir(view);
     return u.section(/#content/,
         u.header(
-            navbar()
+            navbar(rootComponent)
         ), 
         (truth.error ? error(truth.error) : view)
     );
