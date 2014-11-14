@@ -4,9 +4,9 @@
 var i = require('immutato');
 
 module.exports = i.struct({
-    id: i.String.maxlength(20).label('Name'),
-    password: i.String,
-    email: i.String.maxlength(200),
+    id: i.String.maxlength(20).minlength(5).label('Name'),
+    password: i.String.minlength(5),
+    email: i.String.maxlength(200).minlength(5),
     admin: i.Boolean.default(false),
     confirmed: i.Boolean.default(false)
 },'User');

@@ -53,8 +53,8 @@ function saveUser(req, res, next) {
 function newUser(req, res) {
     var user = new User({
         id: 'newUser',
-        password: '',
-        email: ''
+        password: 'password',
+        email: 'a@b.c'
     });
 
     res.renderTruth('editUser', {
