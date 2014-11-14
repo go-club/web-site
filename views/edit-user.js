@@ -1,6 +1,7 @@
 var u = require('jubiq');
 var schema = require('../models/jt-form-schema');
 var form = require('./components/form');
+var undoBtn = require('./components/undo-btn');
 
 module.exports = function render(userSchema, rootComponent) {
     var user = userSchema.model;
@@ -15,7 +16,7 @@ module.exports = function render(userSchema, rootComponent) {
             },
             'Save changes'
         ),
-        u.a(/.undo/, u.i(/.fa.fa-undo/)),
+        undoBtn(rootComponent,'.fa.fa-undo','Undo','.undo'),
         u.a(/.redo/, u.i(/.fa.fa-repeat/))
     ];
 
@@ -24,6 +25,7 @@ module.exports = function render(userSchema, rootComponent) {
             u.h1('Edit User')
         ),
         form({
+                name: 'edit-user',
                 action: '/users/' + user.id, 
                 method: 'POST',
                 rootComponent: rootComponent,

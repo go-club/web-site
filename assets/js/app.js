@@ -38,17 +38,17 @@ function virtualify() {
         a.addEventListener('click', raiseAction, false);
 
     });
-
+/*
     var undo = document.querySelector('a.undo');
 
 
     undo.addEventListener('click', onUndo, false);
+*/
 
     var redo = document.querySelector('a.redo');
 
 
     redo.addEventListener('click', onRedo, false);
-
 
 }
 
@@ -79,7 +79,7 @@ function raiseAction(e) {
 
 
 /////////////////////////////////////////////
-var redoObjects = new WeakMap();
+var redoObjects
 
 /////////////////////////////////////////////
 
@@ -99,6 +99,7 @@ function onRedo(e) {
 
 }
 
+/*
 function onUndo(e) {
     var maybeRoot = Object.getPrototypeOf(component.root);
     if (Object.getPrototypeOf(maybeRoot).constructor.name !== 'Root') {
@@ -109,4 +110,4 @@ function onUndo(e) {
     component.root = maybeRoot;
     component.emit('changed');
 
-}
+}*/

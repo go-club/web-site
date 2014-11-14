@@ -18,7 +18,7 @@ var pngcrush = require('imagemin-pngcrush');
 
 var rootStyle = './assets/styles/style.scss';
 var styles = './assets/styles/**/*.scss';
-var srcs = ['./models/**/*.js', './routes/**/*.js', './app.js'];
+var srcs = ['./models/**/*.js', './routes/**/*.js', './views/**/*.js', './app.js'];
 var tests = './test/**/*.js';
 var clientJs = './assets/js/app.js';
 

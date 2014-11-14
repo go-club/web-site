@@ -1,10 +1,18 @@
 'use strict';
 
-module.exports = form;
 
 var u = require('jubiq');
 var objectPath = require('object-path');
+var thunk = require('vdom-thunk');
 
+/**
+ *  keep track of hooks by form name to avoid create a new
+ *  chnage and submit hooks on every rendering
+ */
+var hooksByName = {};
+
+
+module.exports = form;
 
 
 /**
@@ -22,13 +30,29 @@ var objectPath = require('object-path');
  */
 function form(opts, children) {
     var action = opts.action;
+    var name = opts.name;
     var method = opts.method;
     var payloadPath = opts.payloadPath;
     var rootComponent = opts.rootComponent;
 
-    return u.form.apply(null, [{
+    /**
+     *  keep track of hooks by form name to avoid create a new
+     *  change and submit hooks on every rendering
+     */
+    var hooks;
+
+    if (name in hooksByName) {
+        hooks = hooksByName[name];
+    } else {
+        hooks = hooksByName[name] = {
             handleChange: new HandleChangeHook(rootComponent, payloadPath),
             handleSubmit: new HandleSubmitHook(rootComponent, payloadPath, action),
+        };
+    }
+
+    return u.form.apply(null, [{
+            handleChange: hooks.handleChange,
+            handleSubmit: hooks.handleSubmit,
 
             action: action,
             method: method
@@ -49,7 +73,15 @@ function HandleChangeHook(rootComponent, payloadPath) {
 }
 
 HandleChangeHook.prototype.hook = function(node, prop, prev) {
-    node.addEventListener('change', this.formInputChanged.bind(this), false);
+    if (this.node !== node) {
+        if (this.listener) {
+            this.node.removeEventListener('change', this.listener, false);
+        }
+        this.listener = this.formInputChanged.bind(this);
+        this.node = node;
+        node.addEventListener('change', this.listener, false);
+    }
+
 };
 
 HandleChangeHook.prototype.formInputChanged = function(e) {
@@ -59,7 +91,7 @@ HandleChangeHook.prototype.formInputChanged = function(e) {
     var component = this.rootComponent;
     var root = component.root;
     var body = objectPath.get(root, this.payloadPath);
-    
+
     component.root = root.set(this.payloadPath + '.' + property, input.value);
 
     component.emit('changed');
@@ -79,10 +111,20 @@ function HandleSubmitHook(rootComponent, payloadPath, action) {
 }
 
 HandleSubmitHook.prototype.hook = function(node, prop, prev) {
-    node.addEventListener('submit', this.formSubmitted.bind(this), false);
+    if (this.node !== node) {
+        if (this.listener) {
+            this.node.removeEventListener('submit', this.listener, false);    
+        }
+        
+        this.listener = this.formSubmitted.bind(this);
+        this.node = node;
+        node.addEventListener('submit', this.listener, false);
 
-    //remove action attribute to prevent html submission
-    node.removeAttribute('action');
+
+        //remove action attribute to prevent html submission
+        node.removeAttribute('action');
+    }
+
 };
 
 HandleSubmitHook.prototype.formSubmitted = function(e) {
@@ -91,7 +133,7 @@ HandleSubmitHook.prototype.formSubmitted = function(e) {
     var component = this.rootComponent;
     var root = component.root;
     var payload = objectPath.get(root, this.payloadPath);
-    
+
     var options = {
         body: JSON.stringify(payload),
         method: method,
