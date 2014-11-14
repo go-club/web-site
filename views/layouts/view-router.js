@@ -8,7 +8,7 @@ module.exports = function(truth, rootComponent) {
     }
     switch (url) {
         case '/users':
-            return require('../users')(truth.users);
+            return require('../users')(truth.users, rootComponent);
         case '/error':
             
             return require('../error')(truth.error);

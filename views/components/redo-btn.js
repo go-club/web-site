@@ -5,18 +5,19 @@ var thunk = require('vdom-thunk');
 var u = require('jubiq');
 var redoObjects = require('./redo-objects');
 var ent = require('ent');
+
 /**
  *  export thunked version to avoid create a new
  *  click hook on every rendering
  */
-module.exports = function undoBtnThunked(rootComponent, icon, text, className) {
-    return thunk(undoBtn, rootComponent, icon, text, className);
+module.exports = function redoBtnThunked(rootComponent, icon, text, className) {
+    return thunk(redoBtn, rootComponent, icon, text, className);
 };
 
 
 /**
  *   render a form that, if js is enabled, will revert
- *   root model to previous state
+ *   root model to undoed state
  *
  *   if js is not enabled, the button appear as disabled
  *   and do nothing when clicked
@@ -26,7 +27,7 @@ module.exports = function undoBtnThunked(rootComponent, icon, text, className) {
  *   text: String - optional caption of the button
  *   className: String - optional class to apply css style to the button
  */
-function undoBtn(rootComponent, icon, text, className) {
+function redoBtn(rootComponent, icon, text, className) {
     var props = [{
         handleClickHook: new HandleClickHook(rootComponent)
     }];
@@ -37,14 +38,16 @@ function undoBtn(rootComponent, icon, text, className) {
     }
 
     if (icon) {
+
         props.push(u.i(new RegExp(icon)));
     }
-    
+
     if (icon && text) {
         props.push(ent.decode('&nbsp;'));
     }
-    
+
     if (text) {
+
         props.push(text);
     }
 
@@ -75,15 +78,17 @@ HandleClickHook.prototype.buttonClicked = function(e) {
     var component = this.rootComponent;
     var root = component.root;
 
-    var maybeRoot = Object.getPrototypeOf(root);
-    if (Object.getPrototypeOf(maybeRoot).constructor.typeName !== 'Root') {
-        alert('no more changes to undo');
+
+    if (!redoObjects.has(component.root)) {
+        alert('no more changes to redo');
         return;
     }
 
-    redoObjects.set(maybeRoot, component.root);
-    component.root = maybeRoot;
 
+    var maybeRoot = redoObjects.get(root);
+    redoObjects.delete(root);
+
+    component.root = maybeRoot;
     component.emit('changed');
 
     e.preventDefault();

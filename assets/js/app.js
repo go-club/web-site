@@ -38,17 +38,6 @@ function virtualify() {
         a.addEventListener('click', raiseAction, false);
 
     });
-/*
-    var undo = document.querySelector('a.undo');
-
-
-    undo.addEventListener('click', onUndo, false);
-*/
-
-    var redo = document.querySelector('a.redo');
-
-
-    redo.addEventListener('click', onRedo, false);
 
 }
 
@@ -77,37 +66,3 @@ function raiseAction(e) {
 
 
 
-
-/////////////////////////////////////////////
-var redoObjects
-
-/////////////////////////////////////////////
-
-
-function onRedo(e) {
-    if (!redoObjects.has(component.root)) {
-        alert('no more changes to redo');
-        return;
-    }
-
-
-    var maybeRoot = redoObjects.get(component.root);
-    redoObjects.delete(component.root);
-
-    component.root = maybeRoot;
-    component.emit('changed');
-
-}
-
-/*
-function onUndo(e) {
-    var maybeRoot = Object.getPrototypeOf(component.root);
-    if (Object.getPrototypeOf(maybeRoot).constructor.name !== 'Root') {
-        alert('no more changes to undo');
-        return;
-    }
-    redoObjects.set(maybeRoot, component.root);
-    component.root = maybeRoot;
-    component.emit('changed');
-
-}*/

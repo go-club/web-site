@@ -1,6 +1,8 @@
 var u = require('jubiq');
+var undoBtn = require('./components/undo-btn');
+var redoBtn = require('./components/redo-btn');
 
-module.exports = function render(users) {
+module.exports = function render(users, rootComponent) {
 
     return u.section(/.users.list.admin/,
 
@@ -15,9 +17,9 @@ module.exports = function render(users) {
                     },
                     u.i(/.fa.fa-plus-circle/)
                 ),
-                u.a(/.undo/, u.i(/.fa.fa-undo/)),
-                u.a(/.redo/, u.i(/.fa.fa-repeat/))
-                
+                undoBtn(rootComponent, '.fa.fa-undo', 'Undo', '.undo'),
+                redoBtn(rootComponent, '.fa.fa-repeat', 'Redo', '.redo')
+
             )
         ),
 
