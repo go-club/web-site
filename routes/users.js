@@ -1,3 +1,4 @@
+var auth = require('./auth');
 var User = require('../models/User');
 var buildSchema = require('../models/jt-form-schema.js').buildSchema;
 var userFormSchema = buildSchema(User);
@@ -69,11 +70,11 @@ function newUser(req, res) {
 module.exports = function(router, buildModel) {
     userStore = buildModel(User);
 
-    router.get('/new', newUser);
-    router.get('/', users);
-    router.get('/:id', editUser);
-    router.post('/:id', saveUser);
-    router.post('/delete/:id', deleteUser);
+    router.get('/new', auth.authorize, newUser);
+    router.get('/', auth.authorize, users);
+    router.get('/:id', auth.authorize, editUser);
+    router.post('/:id', auth.authorize, saveUser);
+    router.post('/delete/:id', auth.authorize, deleteUser);
     return router;
 };
 

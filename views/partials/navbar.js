@@ -7,14 +7,14 @@ function userActions(rootComponent) {
 
 
     if (!rootComponent.root.loggedUser) {
-        return  u.li(
+        return u.li(
             link(rootComponent, '/auth/login', null, 'Login with your account', null, 'Login', '.sign-up')
         );
     } else {
         return u.li(
             u.a(rootComponent.root.loggedUser.id),
             u.ul(
-                u.li(u.a('Logout')),
+                u.li(link(rootComponent, '/auth/logout', null, '', null, 'Logout')),
                 u.li(u.a('Profile'))
             )
         );
@@ -25,7 +25,9 @@ function userActions(rootComponent) {
 module.exports = function render(rootComponent) {
 
     return u.nav(
-        u.a(/.logo/,
+        u.a(/.logo/, {
+                href: '/'
+            },
             u.img({
                 src: logoUrl,
                 alt: 'go-club'

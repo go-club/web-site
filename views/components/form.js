@@ -131,6 +131,9 @@ HandleSubmitHook.prototype.hook = function(node, prop, prev) {
 
 HandleSubmitHook.prototype.formSubmitted = function(e) {
     var request = require('browser-request');
+    var parseUrl = require('./parse-url');
+    var url = require('url');
+
     var method = e.currentTarget.getAttribute('method') || 'get';
     var component = this.rootComponent;
     var root = component.root;
@@ -146,12 +149,12 @@ HandleSubmitHook.prototype.formSubmitted = function(e) {
         }
     };
 
-    console.dir(JSON.stringify(payload, null, 4));
 
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
+        var responseUri = parseUrl(response.responseURL).pathname;
         var operations = {
-                //url: route,
+                url: responseUri,
                 flash: res.flash,
                 loggedUser: res.loggedUser
         };

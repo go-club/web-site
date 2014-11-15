@@ -108,25 +108,30 @@ HandleClickHook.prototype.hook = function(node, prop, prev) {
 };
 
 HandleClickHook.prototype.anchorClicked = function(e) {
+    var request = require('browser-request');
+    var parseUrl = require('./parse-url');
+
+
     var component = this.rootComponent;
     var root = component.root;
 
-    var url = this.href;
-    var route = this.route || url;
+    var uri = this.href;
+    var route = this.route || uri;
 
     var options = {
-        url: url,
+        url: uri,
         headers: {
             'accept': 'application/json'
         }
     };
     
-    var request = require('browser-request');
+
 
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
+        var responseUri = parseUrl(response.responseURL).pathname;
         var operations = {
-                url: route,
+                url: responseUri === uri ? route : responseUri,
                 flash: res.flash,
                 loggedUser: res.loggedUser
         };
@@ -138,7 +143,7 @@ HandleClickHook.prototype.anchorClicked = function(e) {
         component.root = root.set(operations);
 
         //jshint browser:true
-        history.pushState(JSON.stringify(component.root), null, url);
+        history.pushState(JSON.stringify(component.root), null, uri);
         component.emit('changed');
     });
 

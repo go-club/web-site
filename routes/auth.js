@@ -19,20 +19,11 @@ function loginPage(req, res, next) {
 
 }
 
-/*
-function login(req, res, next) {
-    var user = User.from(req.body);
-    userStore.save(user)
-        .then(function() {
-            res.redirect('/users/' + encodeURIComponent(user.id));
-        })
-        .then(null, function(err) {
-
-            next(err);
-        });
-
+function logout (req, res){
+  req.logout();
+  res.redirect('/');
 }
-*/
+
 
 
 module.exports = function(router, buildModel, passport) {
@@ -46,7 +37,18 @@ module.exports = function(router, buildModel, passport) {
 
     router.get('/login', loginPage);
     router.post('/login', loginMW);
+    router.get('/logout', logout);
+
     return router;
+};
+
+module.exports.authorize = function authorize(req, res, next) {
+    if (!req.user) {
+        req.flash('error','You are not authorized to view this page, please login');
+        res.redirect('/auth/login');
+    } else {
+        next();
+    }
 };
 
 module.exports.loginStrategy = function(username, password, done) {

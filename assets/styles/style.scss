@@ -1,28 +1,33 @@
-
-@import "font-awesome";
-@import "colors";
-@import "bourbon"; // or "bourbon" when in Rails
-@import "_base";
+@import"font-awesome";
+@import"colors";
+@import"bourbon"; // or "bourbon" when in Rails
+@import"_base";
 //@import "_buttons";
-@import "grid-settings";
-@import "neat";
-@import "_tables";
-
-@import "admins";
-@import "header";
-
-
-
+@import"grid-settings";
+@import"neat";
+@import"_tables";
+@import"admins";
+@import"header";
 a {
-	cursor:pointer !important;
+    cursor: pointer !important;
 }
-
 body {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+}
+body > section#content > section {
+    @include outer-container;
 }
 
-body > section#content > section {
-
-  @include outer-container;
+.flash {
+    position: absolute;
+    bottom: 20px;
+    right: 4px;
+    background: $md-red-500;
+    padding: 20px;
+    border: 1px solid $md-red-800;
+    border-radius: 4px;
+    color: $md-grey-800;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.4);
+    z-index: 1;
 }

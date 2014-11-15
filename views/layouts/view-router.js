@@ -12,6 +12,8 @@ module.exports = function(rootComponent) {
             return require('../home')(rootComponent);
         case '/auth/login':
             return require('../login')(rootComponent);
+        case '/auth/logout':
+            return require('../home')(rootComponent);
         case '/users':
             return require('../users')(rootComponent);
         case '/error':
