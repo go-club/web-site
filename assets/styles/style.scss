@@ -22,7 +22,7 @@ body {
   padding: 0;
 }
 
-section#content  {
+body > section#content > section {
 
   @include outer-container;
 }
