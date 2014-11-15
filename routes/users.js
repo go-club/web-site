@@ -41,7 +41,7 @@ function saveUser(req, res, next) {
     var user = User.from(req.body);
     userStore.save(user)
         .then(function() {
-            res.redirect('/users/' + user.id);
+            res.redirect('/users/' + encodeURIComponent(user.id) );
         })
         .then(null, function(err){
             

@@ -94,6 +94,8 @@ HandleChangeHook.prototype.formInputChanged = function(e) {
 
     component.root = root.set(this.payloadPath + '.' + property, input.value);
 
+    console.dir(JSON.stringify(objectPath.get(root, this.payloadPath), null, 4));
+
     component.emit('changed');
 
     e.preventDefault();
@@ -143,6 +145,8 @@ HandleSubmitHook.prototype.formSubmitted = function(e) {
             'accept': 'application/json'
         }
     };
+
+    console.dir(JSON.stringify(payload, null, 4));
 
     request(options, function(er, response, body) {
         var res = JSON.parse(body);

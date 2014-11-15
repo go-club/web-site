@@ -10,25 +10,9 @@ var routes = require('./routes/index');
 var initModel = require('./models/init');
 var app = express();
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    type: 'application/x-www-form-urlencoded',
-    extended: true
-}));
-app.use(cookieParser());
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'node_modules/font-awesome')));
-
-var truth = require('./models/truth');
-var mainView = require('./views/layouts/main');
-var u = require('jubiq');
 app.use(function render(req, res, next) {
-    res.renderTruth = function(name, data) {
+    res.renderTruth = function(name, data, route) {
         if (req.get('accept') == 'application/json') {
             res.json({
                 data: data,
@@ -36,7 +20,7 @@ app.use(function render(req, res, next) {
             });
             res.end();
         } else {
-            var url = req.baseUrl + req.route.path;
+            var url = route || (req.baseUrl + req.route.path);
             console.log(url);
             var model = truth(url, null, name, data);
             var content = u.render(mainView(model));
@@ -48,9 +32,29 @@ app.use(function render(req, res, next) {
     next();
 });
 
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(logger('dev'));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    type: 'application/x-www-form-urlencoded',
+    extended: true
+}));
+app.use(cookieParser());
+
+var truth = require('./models/truth');
+var mainView = require('./views/layouts/main');
+var u = require('jubiq');
+
 //app.use('/', routes.home);
 var buildModel = require('./models/jt-mongoose.js');
 app.use('/users', routes.users(express.Router(), buildModel));
+
+
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'node_modules/font-awesome')));
 
 
 initModel();
@@ -68,14 +72,16 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
 
     res.status(err.status || 500);
-    req.baseUrl = '/';
-    req.route.path = 'error';
+    
+    var url = '/error';
+    console.dir(res.renderTruth);
+    console.dir(err);
     res.renderTruth('error', {
         status: err.status || 500,
         type: err.constructor && err.constructor.name,
         message: err.message,
         stack: err.stack
-    });
+    },url);
 
 
 });
