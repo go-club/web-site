@@ -31,7 +31,8 @@ body > section > header >nav {
     ul#navigation-tools {
         float: right;
         li {
-            width: 150px;
+            min-width: 160px;
+            text-align: right;
         }
     }
     input[type="search"], button[type="button"] {
@@ -41,7 +42,7 @@ body > section > header >nav {
         margin: 2px 0 2px 0;
     }
     input[type="search"]:focus {
-        width: 160px;
+        width: 200px;
     }
     input[type="search"] {
         width: 80px;

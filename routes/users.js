@@ -4,8 +4,6 @@ var buildSchema = require('../models/jt-form-schema.js').buildSchema;
 var userFormSchema = buildSchema(User);
 var userStore;
 
-//var u = require('jubiq');
-
 function users(req, res, next) {
     userStore.all()
         .then(function(users) {
@@ -39,7 +37,9 @@ function deleteUser(req, res, next) {
 }
 
 function saveUser(req, res, next) {
-    var user = User.from(req.body);
+    var data = userFormSchema.from(req.body);
+    console.dir(data)
+    var user = User.from(data);
     userStore.save(user)
         .then(function() {
             res.redirect('/users/' + encodeURIComponent(user.id));

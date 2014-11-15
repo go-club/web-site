@@ -92,7 +92,12 @@ HandleChangeHook.prototype.formInputChanged = function(e) {
     var root = component.root;
     var body = objectPath.get(root, this.payloadPath);
 
-    component.root = root.set(this.payloadPath + '.' + property, input.value);
+    var prop = body.constructor.props[property];
+    var value = input.type === 'checkbox' ? input.checked : input.value;
+
+    prop.from(value);
+
+    component.root = root.set(this.payloadPath + '.' + property, value);
 
     console.dir(JSON.stringify(objectPath.get(root, this.payloadPath), null, 4));
 
