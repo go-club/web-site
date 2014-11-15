@@ -4,14 +4,15 @@
 var thunk = require('vdom-thunk');
 var u = require('jubiq');
 var redoObjects = require('./redo-objects');
-var ent = require('ent');
+var he = require('he');
 var popstateHooked;
 /**
  *  export thunked version to avoid create a new
  *  click hook on every rendering
  */
 module.exports = function linkThunked(rootComponent, href, route, title, icon, text, className) {
-    return thunk(link, rootComponent, href, route, title, icon, text, className);
+    var result =  thunk(link, rootComponent, href, route, title, icon, text, className);
+    return result;
 };
 
 
@@ -29,7 +30,6 @@ module.exports = function linkThunked(rootComponent, href, route, title, icon, t
  *   className: String - optional class to apply css style to the button
  */
 function link(rootComponent,  href, route, title, icon, text, className) {
-    
 
 
     //handles back buttons
@@ -65,7 +65,7 @@ function link(rootComponent,  href, route, title, icon, text, className) {
     }
 
     if (icon && text) {
-        props.push(ent.decode('&nbsp;'));
+        props.push(he.decode('&nbsp;'));
     }
 
     if (text) {
@@ -94,10 +94,13 @@ HandleClickHook.prototype.hook = function(node, prop, prev) {
 
         //remove href attr to prevent
         //html handling
-        this.node.removeAttribute('href');
+        setTimeout(function(){
+            node.removeAttribute('href');    
+        });
+        
         
         this.listener = this.anchorClicked.bind(this);
-        node.addEventListener('click', this.listener, false);
+        node.onclick = this.listener;
     }
 
 
@@ -123,9 +126,15 @@ HandleClickHook.prototype.anchorClicked = function(e) {
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
         var operations = {
-                url: route
+                url: route,
+                flash: res.flash,
+                loggedUser: res.loggedUser
         };
-        operations[res.name] = res.data;
+        
+        if (res.name) {
+            operations[res.name] = res.data;    
+        }
+        
         component.root = root.set(operations);
 
         //jshint browser:true

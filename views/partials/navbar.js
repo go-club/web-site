@@ -3,6 +3,24 @@ var logoUrl = '/img/white.png';
 var link = require('../components/link');
 //rootComponent, href, route, icon, text, className
 
+function userActions(rootComponent) {
+    
+
+    if (!rootComponent.root.loggedUser) {
+        return link(rootComponent,'/auth/login',null,'Login with your account',null,'Login','.sign-up');
+    } else {
+        return u.ul(/#user-actions/,
+            u.li(/.nav-link.more/, u.a(rootComponent.root.loggedUser.id),
+                u.ul(/.submenu/,
+                    u.li(u.a('Logout')),
+                    u.li(u.a('Profile'))
+                )
+            )
+        );
+
+    }
+}
+
 module.exports = function render(rootComponent) {
 
     return u.nav(
@@ -33,7 +51,7 @@ module.exports = function render(rootComponent) {
                         )
                     )
                 ),
-                u.a(/.sign-up/, 'Sign Up')
+                userActions(rootComponent)   
             )
         )
     );

@@ -1,12 +1,11 @@
 var u = require('jubiq');
 var content = require('./body');
 
-module.exports = function render(truth) {
-    //console.log(truth, typeof truth);
-    //throw new Error    
+module.exports = function render(rootComponent) {
+    var truth = rootComponent.root;  
     var root = JSON.stringify(truth);
     truth.debug();
-    console.log(root)
+    //console.log(root)
     return u.html({
             lang: 'en'
         },
@@ -24,11 +23,15 @@ module.exports = function render(truth) {
                 rel: 'stylesheet',
                 href: '/style.css',
                 media: 'screen'
+            }),
+            u.link({
+                rel: 'icon',
+                href: '/img/favicon.png'
             })
         ),
 
         u.body(
-            content(truth),
+            content(rootComponent),
 
             u.script('var truth = ' + root + ';'),
             u.script({src:'/go-club.js'})

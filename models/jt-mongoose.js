@@ -5,6 +5,9 @@ var assign = require('object-assign');
 
 function demongoosify(Structure) {
     return function(doc) {
+        if (!doc) {
+            return null;
+        }
         delete doc._doc._id;
         delete doc._doc.__v;
 

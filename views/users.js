@@ -4,7 +4,8 @@ var redoBtn = require('./components/redo-btn');
 var link = require('./components/link');
 var form = require('./components/form');
 
-module.exports = function render(users, rootComponent) {
+module.exports = function render(rootComponent) {
+    var users = rootComponent.root.users;
 
     return u.section(/.users.list.admin/,
 

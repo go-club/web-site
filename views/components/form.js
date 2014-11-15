@@ -150,8 +150,17 @@ HandleSubmitHook.prototype.formSubmitted = function(e) {
 
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
-
-        component.root = root.set(res.name, res.data);
+        var operations = {
+                //url: route,
+                flash: res.flash,
+                loggedUser: res.loggedUser
+        };
+        
+        if (res.name) {
+            operations[res.name] = res.data;    
+        }
+        
+        component.root = root.set(operations);
 
         component.emit('changed');
     });

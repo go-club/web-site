@@ -5,36 +5,30 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var jubiqExpress = require('./jubiq-express');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var session = require('express-session');
+var flash = require('connect-flash');
 
-var routes = require('./routes/index');
-var initModel = require('./models/init');
+var routes = require('./routes');
+var connectMongo = require('./models/init');
+var buildModel = require('./models/jt-mongoose.js');
+var mainView = require('./views/layouts/main');
+var Root = require('./models/Root');
+
 var app = express();
 
+connectMongo();
 
-app.use(function render(req, res, next) {
-    res.renderTruth = function(name, data, route) {
-        if (req.get('accept') == 'application/json') {
-            res.json({
-                data: data,
-                name: name
-            });
-            res.end();
-        } else {
-            var url = route || (req.baseUrl + req.route.path);
-            console.log(url);
-            var model = truth(url, null, name, data);
-            var content = u.render(mainView(model));
-            res.set('Content-Type', 'text/html');
-            res.end('<!doctype html>\n' + content);
-        }
+passport.use(new LocalStrategy(routes.auth.loginStrategy));
+routes.auth.serialization(passport);
 
-    };
-    next();
-});
+app.use( jubiqExpress(mainView, Root) );
 
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/img/favicon.png'));
+
 app.use(logger('dev'));
 
 app.use(bodyParser.json());
@@ -44,20 +38,24 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(cookieParser());
 
-var truth = require('./models/truth');
-var mainView = require('./views/layouts/main');
-var u = require('jubiq');
+app.use(session({ 
+    secret: 'dfgfdgfdgfdgfdgfdgewrwe,yuk1237' ,
+    resave: false,
+    saveUninitialized: false
+}));
 
-//app.use('/', routes.home);
-var buildModel = require('./models/jt-mongoose.js');
+app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/', routes.home(express.Router()));
 app.use('/users', routes.users(express.Router(), buildModel));
+app.use('/auth', routes.auth(express.Router(), buildModel, passport));
 
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'node_modules/font-awesome')));
 
-
-initModel();
 
 
 // catch 404 and forward to error handler
@@ -67,24 +65,7 @@ app.use(function(req, res, next) {
     next(err);
 });
 
-
-
-app.use(function(err, req, res, next) {
-
-    res.status(err.status || 500);
-    
-    var url = '/error';
-    console.dir(res.renderTruth);
-    console.dir(err);
-    res.renderTruth('error', {
-        status: err.status || 500,
-        type: err.constructor && err.constructor.name,
-        message: err.message,
-        stack: err.stack
-    },url);
-
-
-});
+app.use(jubiqExpress.errorMiddleware);
 
 
 module.exports = app;

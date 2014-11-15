@@ -41,10 +41,10 @@ function saveUser(req, res, next) {
     var user = User.from(req.body);
     userStore.save(user)
         .then(function() {
-            res.redirect('/users/' + encodeURIComponent(user.id) );
+            res.redirect('/users/' + encodeURIComponent(user.id));
         })
-        .then(null, function(err){
-            
+        .then(null, function(err) {
+
             next(err);
         });
 
@@ -66,7 +66,7 @@ function newUser(req, res) {
 
 
 
-module.exports = function(router, buildModel){
+module.exports = function(router, buildModel) {
     userStore = buildModel(User);
 
     router.get('/new', newUser);
@@ -76,3 +76,4 @@ module.exports = function(router, buildModel){
     router.post('/delete/:id', deleteUser);
     return router;
 };
+

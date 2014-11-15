@@ -1,6 +1,7 @@
 var u = require('jubiq');
 
-module.exports = function render(error){
+module.exports = function render(rootComponent){
+	var error = rootComponent.root.error;
 	console.log (error);
 	return u.section(
 		u.h1(error.status),

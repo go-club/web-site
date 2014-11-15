@@ -3,15 +3,17 @@ var error = require('../error');
 var navbar = require('../partials/navbar');
 var viewRouter = require('./view-router');
 
-module.exports = function render(truth, rootComponent) {
-
-    var view = viewRouter(truth, rootComponent);
-//console.dir(view);
+module.exports = function render(rootComponent) {
+    var truth = rootComponent.root;	
+    var view = viewRouter(rootComponent);
+	
+	console.dir(truth.flash);
     return u.section(/#content/,
         u.header(
             navbar(rootComponent)
         ), 
-        (truth.error ? error(truth.error) : view)
+        truth.flash,
+        (truth.error ? error(rootComponent) : view)
     );
 
 };

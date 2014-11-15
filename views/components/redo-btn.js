@@ -4,7 +4,7 @@
 var thunk = require('vdom-thunk');
 var u = require('jubiq');
 var redoObjects = require('./redo-objects');
-var ent = require('ent');
+var he = require('he');
 
 /**
  *  export thunked version to avoid create a new
@@ -43,7 +43,7 @@ function redoBtn(rootComponent, icon, text, className) {
     }
 
     if (icon && text) {
-        props.push(ent.decode('&nbsp;'));
+        props.push(he.decode('&nbsp;'));
     }
 
     if (text) {
@@ -67,7 +67,7 @@ HandleClickHook.prototype.hook = function(node, prop, prev) {
         }
         this.node = node;
         this.listener = this.buttonClicked.bind(this);
-        node.addEventListener('click', this.listener, false);
+        node.onclick = this.listener;
     }
 
 

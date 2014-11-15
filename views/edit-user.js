@@ -4,7 +4,8 @@ var form = require('./components/form');
 var undoBtn = require('./components/undo-btn');
 var redoBtn = require('./components/redo-btn');
 
-module.exports = function render(userSchema, rootComponent) {
+module.exports = function render(rootComponent) {
+    var userSchema = rootComponent.root.editUser;
     var user = userSchema.model;
     var fields = userSchema.schema;
     var htmlFields = fields.map(function(f) {
