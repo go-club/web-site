@@ -38,7 +38,6 @@ function deleteUser(req, res, next) {
 
 function saveUser(req, res, next) {
     var data = userFormSchema.from(req.body);
-    console.dir(data)
     var user = User.from(data);
     userStore.save(user)
         .then(function() {
@@ -55,7 +54,8 @@ function newUser(req, res) {
     var user = new User({
         id: 'newUser',
         password: 'password',
-        email: 'a@b.c'
+        email: 'a@b.c',
+        registered: new Date()
     });
 
     res.renderTruth('editUser', {

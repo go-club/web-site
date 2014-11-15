@@ -95,11 +95,11 @@ HandleChangeHook.prototype.formInputChanged = function(e) {
     var prop = body.constructor.props[property];
     var value = input.type === 'checkbox' ? input.checked : input.value;
 
-    prop.from(value);
+    
 
-    component.root = root.set(this.payloadPath + '.' + property, value);
+    component.root = root.set(this.payloadPath + '.' + property, prop.from(value));
 
-    console.dir(JSON.stringify(objectPath.get(root, this.payloadPath), null, 4));
+    //console.dir(JSON.stringify(objectPath.get(root, this.payloadPath), null, 4));
 
     component.emit('changed');
 
@@ -129,7 +129,10 @@ HandleSubmitHook.prototype.hook = function(node, prop, prev) {
 
 
         //remove action attribute to prevent html submission
-        node.removeAttribute('action');
+        setTimeout(function(){
+            node.removeAttribute('action');    
+        });
+        
     }
 
 };
@@ -137,7 +140,6 @@ HandleSubmitHook.prototype.hook = function(node, prop, prev) {
 HandleSubmitHook.prototype.formSubmitted = function(e) {
     var request = require('browser-request');
     var parseUrl = require('./parse-url');
-    var url = require('url');
 
     var method = e.currentTarget.getAttribute('method') || 'get';
     var component = this.rootComponent;
@@ -158,11 +160,16 @@ HandleSubmitHook.prototype.formSubmitted = function(e) {
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
         var responseUri = parseUrl(response.responseURL).pathname;
+        //jshint browser:true
         var operations = {
-                url: responseUri,
                 flash: res.flash,
                 loggedUser: res.loggedUser
         };
+
+        //don't work in case such as users/new that redirect to users/id
+        if (responseUri !== location.pathname){
+            operations.url = responseUri;
+        }
         
         if (res.name) {
             operations[res.name] = res.data;    

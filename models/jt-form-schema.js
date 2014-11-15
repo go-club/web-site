@@ -10,6 +10,8 @@ function inputType(type) {
             return 'text';
         case 'Boolean':
             return 'checkbox';
+        case 'Date':
+            return 'date';
         
     }
     return 'text';
@@ -60,9 +62,20 @@ exports.buildSchema = function buildSchema(Structure, fields) {
 };
 
 exports.render = function render(field, value) {
+    var val;
+
+    if (field.type === 'checkbox') {
+        val = 'true';
+    } else if (field.type === 'date') {
+        val = new Date(value).toISOString().slice(0,10);
+    } else {
+        val = value;
+    }
+
+
     return u.label(field.label, u.input({
         type: field.type,
-        value: field.type === 'checkbox' ? 'true' : value,
+        value: val,
         checked: field.type === 'checkbox' ? value : undefined,
         name: field.name
     }));
