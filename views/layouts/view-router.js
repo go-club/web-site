@@ -16,6 +16,10 @@ module.exports = function(rootComponent) {
             return require('../home')(rootComponent);
         case '/users':
             return require('../users')(rootComponent);
+        
+        case '/auth/change-password':
+            return require('../change-password')(rootComponent);
+
         case '/error':
             
             return require('../error')(rootComponent);

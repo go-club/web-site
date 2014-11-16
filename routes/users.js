@@ -1,4 +1,7 @@
+'use strict';
 var auth = require('./auth');
+var bcrypt = require('bcrypt');
+
 var User = require('../models/User');
 var buildSchema = require('../models/jt-form-schema.js').buildSchema;
 var userFormSchema = buildSchema(User);
@@ -36,17 +39,56 @@ function deleteUser(req, res, next) {
 
 }
 
+function changeUser(actualUser, newUser) {
+    var changes = {};
+    Object.keys(newUser).forEach(function(name) {
+        changes[name] = User.props[name].from(newUser[name]);
+    });
+    actualUser = actualUser.set(changes);
+    return userStore.save(actualUser);
+}
+
 function saveUser(req, res, next) {
     var data = userFormSchema.from(req.body);
-    var user = User.from(data);
-    userStore.save(user)
-        .then(function() {
-            res.redirect('/users/' + encodeURIComponent(user.id));
-        })
-        .then(null, function(err) {
 
-            next(err);
-        });
+    userStore.get(data.id)
+        .then(function(user) {
+
+            if (!user) {
+                return new Promise(function (resolve, reject){
+                    bcrypt.hash('password', 10, function(err, hash) {
+                        if (err) {
+                            return reject(err);
+                        }
+
+                        user = new User({
+                            id: 'newUser',
+                            password: hash,
+                            email: 'a@b.c',
+                            registered: new Date()
+                        });
+
+                        resolve(changeUser(user, data));
+                    });
+                        
+                });
+                
+            }
+
+            return changeUser(user, data);
+
+
+        })
+
+    .then(function() {
+        res.redirect('/users/' + encodeURIComponent(data.id));
+
+    })
+
+    .then(null, function(err) {
+
+        next(err);
+    });
 
 }
 
@@ -77,4 +119,3 @@ module.exports = function(router, buildModel) {
     router.post('/delete/:id', auth.authorize, deleteUser);
     return router;
 };
-

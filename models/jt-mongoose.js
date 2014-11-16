@@ -56,7 +56,11 @@ module.exports = function buildModel(Structure) {
                                 if (!existingDoc) {
                                     existingDoc = new Model();
                                 }
-                                assign(existingDoc, instance);
+
+                                Structure.meta.fields.forEach(function(f){
+                                    existingDoc[f.name] = instance[f.name];
+
+                                });
 
                                 existingDoc.save(function(err) {
                                     if (err) {

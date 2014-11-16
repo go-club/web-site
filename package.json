@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "bcrypt": "^0.8.0",
     "body-parser": "~1.6.6",
     "browser-request": "^0.3.2",
     "chilli": "^0.1.0",

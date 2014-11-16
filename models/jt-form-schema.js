@@ -24,7 +24,7 @@ exports.buildSchema = function buildSchema(Structure, fields) {
                 return !f.type.hidden &&  ( (!fields) || fields.indexOf(f.name) !== -1 );
             })
             .map(function(f) {
-                console.dir(f);
+                //console.dir(f);
                 var attrs = {
                     name: f.name,
                     type: f.type.inputType || inputType(f.type.primitive.name),
@@ -43,7 +43,7 @@ exports.buildSchema = function buildSchema(Structure, fields) {
     builder.from = function(data){
         var inputs = Structure.meta.fields
             .filter(function(f) {
-                return (!fields) || fields.indexOf(f.name) !== -1;
+                return !f.type.readonly &&  !f.type.hidden &&  ( (!fields) || fields.indexOf(f.name) !== -1 );
             })
             .map(function(f) {
                 var fData =  {};
@@ -66,11 +66,9 @@ exports.buildSchema = function buildSchema(Structure, fields) {
 exports.render = function render(field, value) {
     var val;
     
-    console.dir(field);
+    //console.dir(field);
 
-    if (field.type === 'checkbox') {
-        val = 'true';
-    } else if (field.type === 'date') {
+    if (field.type === 'date') {
         if (value) {
             val = new Date(value).toISOString().slice(0,10);    
         } else {
@@ -83,15 +81,25 @@ exports.render = function render(field, value) {
 
     var attrs = {
         type: field.type,
-        
-        required: field.required,
-        disabled: !!field.readonly,
-        value: val,
-        checked: field.type === 'checkbox' ? value : undefined,
         name: field.name
     };
 
-    
+    if (field.type === 'checkbox') {
+        if (value) {
+            attrs.checked = value;    
+        }
+        
+    } else {
+        attrs.value = value;
+    }
+
+    if (field.required) {
+        attrs.required = 'required';
+    }
+
+    if (field.readonly) {
+        attrs.disabled = 'disabled';
+    }
 
     return u.label(field.label, u.input(attrs));
 };

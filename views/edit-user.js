@@ -3,6 +3,7 @@ var schema = require('../models/jt-form-schema');
 var form = require('./components/form');
 var undoBtn = require('./components/undo-btn');
 var redoBtn = require('./components/redo-btn');
+var link = require('./components/link');
 
 module.exports = function render(rootComponent) {
     var userSchema = rootComponent.root.editUser;
@@ -18,6 +19,7 @@ module.exports = function render(rootComponent) {
             },
             'Save changes'
         ),
+        link(rootComponent,'/auth/change-password',null,'Change Password',null,'Change Password'),
         undoBtn(rootComponent,'.fa.fa-undo','Undo','.undo'),
         redoBtn(rootComponent,'.fa.fa-repeat','Redo','.redo'),
         
