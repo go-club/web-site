@@ -67,7 +67,12 @@ exports.render = function render(field, value) {
     if (field.type === 'checkbox') {
         val = 'true';
     } else if (field.type === 'date') {
-        val = new Date(value).toISOString().slice(0,10);
+        if (value) {
+            val = new Date(value).toISOString().slice(0,10);    
+        } else {
+            val = null;
+        }
+        
     } else {
         val = value;
     }

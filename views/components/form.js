@@ -96,11 +96,17 @@ HandleChangeHook.prototype.formInputChanged = function(e) {
     var value = input.type === 'checkbox' ? input.checked : input.value;
 
     
+    try {
+        component.root = root.set(this.payloadPath + '.' + property, prop.from(value));    
+        input.setCustomValidity('');
+        input.parentNode.removeAttribute('data-validity');
+    } catch(err) {
+        input.setCustomValidity(err.message);
+        input.parentNode.setAttribute('data-validity',err.message);
+    }
+    
 
-    component.root = root.set(this.payloadPath + '.' + property, prop.from(value));
-
-    //console.dir(JSON.stringify(objectPath.get(root, this.payloadPath), null, 4));
-
+    
     component.emit('changed');
 
     e.preventDefault();

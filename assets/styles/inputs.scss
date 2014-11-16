@@ -1,0 +1,44 @@
+@import "colors";
+
+@mixin shiny-border($color, $size) {
+	border: 1px solid $color;
+	box-shadow: 1px 1px (2px * $size) transparentize($color, 0.48),
+			 -1px -1px (2px * $size) 	transparentize($color, 0.48);
+}
+
+input {
+	transition: background 0.6s ease-out, border 0.6s ease-out,box-shadow 0.6s ease-out !important;
+}
+
+input:invalid {
+	@include shiny-border($md-red-400, 2);
+}
+
+input:invalid:hover {
+	@include shiny-border($md-red-400, 3);
+}
+
+input:invalid:focus {
+	@include shiny-border($md-red-400, 4);
+	background: transparentize($md-red-400, 0.95)
+}
+
+
+input:valid {
+	border: 1px solid $md-light-blue-400;
+}
+
+input:valid:hover {
+	@include shiny-border($md-light-blue-400, 1);
+}
+
+input:valid:focus {
+	@include shiny-border($md-light-blue-400, 2);
+	background: transparentize($md-light-blue-400, 0.95)
+}
+
+label[data-validity]:after {
+	content: attr(data-validity);
+	font-size: 80%;
+	color: $md-red-400;
+}
