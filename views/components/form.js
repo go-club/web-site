@@ -99,7 +99,12 @@ HandleChangeHook.prototype.formInputChanged = function(e) {
     try {
         component.root = root.set(this.payloadPath + '.' + property, prop.from(value));    
         input.setCustomValidity('');
-        input.parentNode.removeAttribute('data-validity');
+        if (!input.validationMessage) {
+            input.parentNode.removeAttribute('data-validity');    
+        } else {
+            input.parentNode.setAttribute('data-validity',input.validationMessage);
+        }
+        
     } catch(err) {
         input.setCustomValidity(err.message);
         input.parentNode.setAttribute('data-validity',err.message);

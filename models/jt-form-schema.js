@@ -21,14 +21,16 @@ exports.buildSchema = function buildSchema(Structure, fields) {
     var builder = function(model){
         var inputs = Structure.meta.fields
             .filter(function(f) {
-                return (!fields) || fields.indexOf(f.name) !== -1;
+                return !f.type.hidden &&  ( (!fields) || fields.indexOf(f.name) !== -1 );
             })
             .map(function(f) {
-                //console.dir(f);
+                console.dir(f);
                 var attrs = {
                     name: f.name,
                     type: f.type.inputType || inputType(f.type.primitive.name),
-                    label: f.type.label
+                    readonly: !!f.type.readonly,
+                    label: f.type.label,
+                    required: f.type.primitive.name !== 'Boolean' && !f.type.optional
                 };
 
                 return attrs;
@@ -63,6 +65,8 @@ exports.buildSchema = function buildSchema(Structure, fields) {
 
 exports.render = function render(field, value) {
     var val;
+    
+    console.dir(field);
 
     if (field.type === 'checkbox') {
         val = 'true';
@@ -77,11 +81,17 @@ exports.render = function render(field, value) {
         val = value;
     }
 
-
-    return u.label(field.label, u.input({
+    var attrs = {
         type: field.type,
+        
+        required: field.required,
+        disabled: !!field.readonly,
         value: val,
         checked: field.type === 'checkbox' ? value : undefined,
         name: field.name
-    }));
+    };
+
+    
+
+    return u.label(field.label, u.input(attrs));
 };

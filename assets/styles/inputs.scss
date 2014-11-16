@@ -37,6 +37,24 @@ input:valid:focus {
 	background: transparentize($md-light-blue-400, 0.95)
 }
 
+
+input[type=checkbox],
+input[type=checkbox]:hover,
+input[type=checkbox]:focus
+{
+	box-shadow:none;
+	border: none;
+	height: 18px;
+	width: 18px;
+	vertical-align: sub;
+}
+
+
+input:disabled {
+	background: transparentize($md-grey-400, 0.8);
+	cursor: not-allowed;
+}
+
 label[data-validity]:after {
 	content: attr(data-validity);
 	font-size: 80%;

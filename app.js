@@ -10,7 +10,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var session = require('express-session');
 var flash = require('connect-flash');
-
+var JsonStore = require('express-session-json')(session);
 var routes = require('./routes');
 var connectMongo = require('./models/init');
 var buildModel = require('./models/jt-mongoose.js');
@@ -41,7 +41,10 @@ app.use(cookieParser());
 app.use(session({ 
     secret: 'dfgfdgfdgfdgfdgfdgewrwe,yuk1237' ,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: new JsonStore({
+    	path: __dirname + '/sessions'
+    })
 }));
 
 app.use(flash());

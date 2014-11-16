@@ -1,6 +1,6 @@
 *.log
 *sublime*
 *config*
-public/style.css
 public/*
 node_modules
+sessions
