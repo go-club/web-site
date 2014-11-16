@@ -78,8 +78,11 @@ function link(rootComponent,  href, route, title, icon, text, className) {
 }
 
 function HandleClickHook(rootComponent, route, href) {
+    if (route) {
+        console.log('link route is obsolete');
+    }
     this.rootComponent = rootComponent;
-    this.route = route;
+    //this.route = route;
     this.href = href;
 }
 
@@ -116,7 +119,7 @@ HandleClickHook.prototype.anchorClicked = function(e) {
     var root = component.root;
 
     var uri = this.href;
-    var route = this.route || uri;
+    //var route = this.route || uri;
 
     var options = {
         url: uri,
@@ -131,7 +134,7 @@ HandleClickHook.prototype.anchorClicked = function(e) {
         var res = JSON.parse(body);
         var responseUri = parseUrl(response.responseURL).pathname;
         var operations = {
-                url: responseUri === uri ? route : responseUri,
+                url: responseUri,
                 flash: res.flash,
                 loggedUser: res.loggedUser
         };
@@ -143,7 +146,7 @@ HandleClickHook.prototype.anchorClicked = function(e) {
         component.root = root.set(operations);
 
         //jshint browser:true
-        history.pushState(JSON.stringify(component.root), null, uri);
+        history.pushState(JSON.stringify(component.root), null, responseUri);
         component.emit('changed');
     });
 

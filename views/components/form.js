@@ -174,13 +174,10 @@ HandleSubmitHook.prototype.formSubmitted = function(e) {
         //jshint browser:true
         var operations = {
                 flash: res.flash,
-                loggedUser: res.loggedUser
+                loggedUser: res.loggedUser,
+                url: responseUri
         };
 
-        //don't work in case such as users/new that redirect to users/id
-        if (responseUri !== location.pathname){
-            operations.url = responseUri;
-        }
         
         if (res.name) {
             operations[res.name] = res.data;    
@@ -188,6 +185,8 @@ HandleSubmitHook.prototype.formSubmitted = function(e) {
         
         component.root = root.set(operations);
 
+        history.pushState(JSON.stringify(component.root), null, responseUri);
+        
         component.emit('changed');
     });
 

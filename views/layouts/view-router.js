@@ -1,34 +1,29 @@
 'use strict';
+var route = require('./route-views');
+
+route('/auth/login', require('../login'));
+route('/auth/logout', require('../home'));
+route('/users/new', require('../edit-user'));
+route('/users/:id', require('../edit-user'));
+route('/users', require('../users'));
+route('/auth/change-password', require('../change-password'));
+route('/error', require('../error'));
+route('/', require('../home'));
+route(/.*/, function(rootComponent) {
+    throw new Error('unknown url:' + rootComponent.root.url);
+});
 
 module.exports = function(rootComponent) {
     var truth = rootComponent.root;
     var url = truth.url;
 
+
     if (url[url.length - 1] == '/') {
-        url = url.slice(0,-1);
+        url = url.slice(0, -1);
     }
-    switch (url) {
-        case '':
-            return require('../home')(rootComponent);
-        case '/auth/login':
-            return require('../login')(rootComponent);
-        case '/auth/logout':
-            return require('../home')(rootComponent);
-        case '/users':
-            return require('../users')(rootComponent);
-        
-        case '/auth/change-password':
-            return require('../change-password')(rootComponent);
+    
 
-        case '/error':
-            
-            return require('../error')(rootComponent);
-        case '/users/new':
-            return require('../edit-user')(rootComponent);
-        case '/users/:id':
-            return require('../edit-user')(rootComponent);
+    console.log('routing for url ', url);
+    return route(url)(rootComponent);
 
-    }
-
-    throw new Error('unknown url:'+url);
 };

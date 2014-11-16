@@ -8,21 +8,23 @@
 
 'use strict';
 var u = require('jubiq');
+var urlParser = require('url');
 module.exports = jubiqExpress;
 
 function jubiqExpress(mainView, RootType) {
 
     function buildRootComponent(url, loggedUser, propName, propValue, flash) {
-        
+
         var root = new RootType({
-                url: url,
-                loggedUser: loggedUser,
-                flash: flash
-            });
+            url: url,
+            loggedUser: loggedUser,
+            flash: flash
+        });
+
         if (propName) {
-            root = root.set(propName, propValue);    
+            root = root.set(propName, propValue);
         }
-        
+
 
 
         return {
@@ -32,7 +34,10 @@ function jubiqExpress(mainView, RootType) {
     }
 
     return function render(req, res, next) {
-        res.renderTruth = function(name, data, route) {
+        res.renderTruth = function(name, data, route, forcedUrl) {
+            if (route) {
+                throw new Error('route argument deprecated');
+            }
             var msg = req.flash('error').join('<br>');
             if (req.get('accept') == 'application/json') {
                 res.json({
@@ -43,7 +48,8 @@ function jubiqExpress(mainView, RootType) {
                 });
                 res.end();
             } else {
-                var url = route || (req.baseUrl + req.route.path);
+
+                var url = forcedUrl || urlParser.parse(req.originalUrl).path;
                 var rootComponent = buildRootComponent(url, req.user, name, data, msg);
                 var content = u.render(mainView(rootComponent));
                 res.set('Content-Type', 'text/html');
@@ -61,14 +67,13 @@ jubiqExpress.errorMiddleware = function(err, req, res, next) {
     res.status(err.status || 500);
 
     var url = '/error';
-    console.dir(res.renderTruth);
     console.dir(err);
     res.renderTruth('error', {
         status: err.status || 500,
         type: err.constructor && err.constructor.name,
         message: err.message,
         stack: err.stack
-    }, url);
+    }, null, url);
 
 
 };
