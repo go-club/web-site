@@ -27,8 +27,10 @@
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
     "path-to-regexp": "^1.0.1",
+    "querystring": "^0.2.0",
     "require-dir": "^0.1.0",
     "serve-favicon": "~2.0.1",
+    "url": "^0.10.1",
     "valid-email": "0.0.2",
     "vdom-thunk": "^3.0.0"
   },

@@ -150,7 +150,7 @@ HandleSubmitHook.prototype.hook = function(node, prop, prev) {
 
 HandleSubmitHook.prototype.formSubmitted = function(e) {
     var request = require('browser-request');
-    var parseUrl = require('./parse-url');
+    var parseUrl = require('url');
 
     var method = e.currentTarget.getAttribute('method') || 'get';
     var component = this.rootComponent;
@@ -170,7 +170,7 @@ HandleSubmitHook.prototype.formSubmitted = function(e) {
 
     request(options, function(er, response, body) {
         var res = JSON.parse(body);
-        var responseUri = parseUrl(response.responseURL).pathname;
+        var responseUri = parseUrl.parse(response.responseURL).pathname;
         //jshint browser:true
         var operations = {
                 flash: res.flash,
